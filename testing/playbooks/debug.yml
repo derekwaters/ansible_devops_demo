@@ -6,3 +6,7 @@
     - name: Dump out ansible_facts for testing
       ansible.builtin.debug:
         var: ansible_facts
+
+    - name: Check the status of the debug_type var
+      ansible.builtin.debug:
+        msg: "debug type is: {{ debug_type }}"
