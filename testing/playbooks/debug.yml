@@ -9,4 +9,4 @@
 
     - name: Check the status of the debug_type var
       ansible.builtin.debug:
-        msg: "debug type is: {{ debug_type }}"
+        msg: "debug type is: {{ debug_type | default('debug_type WAS NOT SET') }}"
