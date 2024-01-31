@@ -1,6 +1,6 @@
 ---
 - name: Listen for Kafka events
-  hosts: localhost
+  hosts: all
   sources:
     - name: Listen to Kafka server broker
       ansible.eda.kafka:
