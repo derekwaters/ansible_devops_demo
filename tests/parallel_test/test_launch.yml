@@ -21,8 +21,24 @@
 
     - name: Set the job id
       ansible.builtin.set_fact:
-        job_id: launch_results.json.id
+        job_id: "{{ launch_results.json.id }}"
     
     - name: The launched job id is
       ansible.builtin.debug:
         msg: "Got the job id {{ job_id }}"
+
+    - name: Get the job status
+      ansible.builtin.uri:
+        url: "https://{{ base_url }}/api/v2/jobs/{{ job_id }}/"
+        method:GET
+        url_username: "{{ aap_user }}"
+        url_password: "{{ aap_password }}"
+        force_basic_auth: true
+        status_code:
+          - 200
+          - 201
+      register: status_check
+
+    - name: Show status
+      ansible.builtin.debug:
+        var: status_check
