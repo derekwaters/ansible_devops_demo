@@ -3,17 +3,12 @@
   hosts: all
 
   tasks:
-    - name: Debug stuff
-      ansible.builtin.debug:
-        var: ansible_user
-        var: ansible_password
-
     - name: Launch the job
       ansible.builtin.uri:
         url: "https://{{ base_url }}/api/v2/job_templates/{{ template_id }}/launch/"
         method: POST
-        url_username: "{{ ansible_user }}"
-        url_password: "{{ ansible_password }}"
+        url_username: "{{ aap_user }}"
+        url_password: "{{ aap_password }}"
       register: launch_results
 
     - name: Debug the results
