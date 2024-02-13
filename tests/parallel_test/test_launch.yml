@@ -30,7 +30,7 @@
     - name: Get the job status
       ansible.builtin.uri:
         url: "https://{{ base_url }}/api/v2/jobs/{{ job_id }}/"
-        method:GET
+        method: GET
         url_username: "{{ aap_user }}"
         url_password: "{{ aap_password }}"
         force_basic_auth: true
