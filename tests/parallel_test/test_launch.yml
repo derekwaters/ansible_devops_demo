@@ -41,4 +41,6 @@
 
     - name: Show status
       ansible.builtin.debug:
-        var: status_check
+        msg: "Status is {{ status_check.json.status }}"
+  
+
