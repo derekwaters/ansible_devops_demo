@@ -18,3 +18,11 @@
     - name: Debug the results
       ansible.builtin.debug:
         var: launch_results
+
+    - name: Set the job id
+      ansible.builtin.set_fact:
+        job_id: launch_results.json.id
+    
+    - name: The launched job id is
+      ansible.builtin.debug:
+        msg: "Got the job id {{ job_id }}"
