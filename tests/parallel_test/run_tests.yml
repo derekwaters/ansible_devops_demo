@@ -1,0 +1,54 @@
+---
+- name: Test launching multiple simultaneous tests
+  hosts: all
+
+  tasks:
+    - name: Debug the inputs
+      ansible.builtin.debug:
+        var: template_ids
+
+    - name: Launch the tests
+      ansible.builtin.uri:
+        url: "https://{{ base_url }}/api/v2/job_templates/{{ template_id }}/launch/"
+        method: POST
+        url_username: "{{ aap_user }}"
+        url_password: "{{ aap_password }}"
+        force_basic_auth: true
+        status_code:
+          - 200
+          - 201
+      register: launch_results
+      failed_when: launch_results | length < 1
+      loop: "{{ template_ids }}"
+      loop_control:
+        loop_var: template_id
+
+    - name: Debug the results
+      ansible.builtin.debug:
+        var: launch_results
+
+#    - name: Set the job id
+#      ansible.builtin.set_fact:
+#        job_id: "{{ launch_results.json.id }}"
+#    
+#    - name: The launched job id is
+#      ansible.builtin.debug:
+#        msg: "Got the job id {{ job_id }}"
+#
+#    - name: Get the job status
+#      ansible.builtin.uri:
+#        url: "https://{{ base_url }}/api/v2/jobs/{{ job_id }}/"
+#        method: GET
+#        url_username: "{{ aap_user }}"
+#        url_password: "{{ aap_password }}"
+#        force_basic_auth: true
+#        status_code:
+#          - 200
+#          - 201
+#      register: status_check
+#
+#    - name: Show status
+#      ansible.builtin.debug:
+#        msg: "Status is {{ status_check.json.status }}"
+  
+
