@@ -3,6 +3,11 @@
   hosts: all
 
   tasks:
+    - name: Debug stuff
+      ansible.builtin.debug:
+        var: ansible_user
+        var: ansible_password
+
     - name: Launch the job
       ansible.builtin.uri:
         url: "https://{{ base_url }}/api/v2/job_templates/{{ template_id }}/launch/"
