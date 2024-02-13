@@ -9,6 +9,7 @@
         method: POST
         url_username: "{{ aap_user }}"
         url_password: "{{ aap_password }}"
+        force_basic_auth: true
       register: launch_results
 
     - name: Debug the results
