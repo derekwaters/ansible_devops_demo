@@ -7,6 +7,8 @@
       ansible.builtin.uri:
         url: "https://{{ base_url }}/api/v2/job_templates/{{ template_id }}/launch/"
         method: POST
+        url_username: "{{ ansible_username }}"
+        url_password: "{{ ansible_password }}"
       register: launch_results
 
     - name: Debug the results
