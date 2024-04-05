@@ -7,5 +7,5 @@ collections:
   - name: containers.podman
   - name: ansible.eda
   - name: servicenow.itsm
-  - name: redhat.openshift
+#  - name: redhat.openshift
   - name: kubernetes.core
