@@ -1,0 +1,15 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: developer-hub-rbac-config
+  namespace: {{ rhdh_namespace }}
+data:
+  rhdh-config-rbac.yaml: |
+    permission:
+      enabled: true
+      rbac:
+        policies-csv-file: ./rbac-policy.csv
+        admin:
+          users:
+            - name: user:default/{{ rhdh_github_username }}

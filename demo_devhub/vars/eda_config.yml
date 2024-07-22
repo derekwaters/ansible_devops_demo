@@ -1,0 +1,27 @@
+---
+eda_projects:
+  - name: augment-incident-project
+    description: ServiceNow Incident Augmentation Demo
+    url: https://github.com/derekwaters/ansible_devops_demo
+eda_decision_environments:
+  - name: augment-incident-de
+    description: ServiceNow Incident Augmentation Demo (with cloin SNOW collection)
+    image_url: "quay.io/rh-ee-dwaters/snow-de"
+eda_rulebook_activations:
+  - name: augment-incident
+    description: ServiceNow Incident Augmentation Demo
+    project: augment-incident-project
+    rulebook: snow_incident_listener.yml
+    decision_environment: augment-incident-de
+    awx_token: "aap-token"
+    extra_vars:
+      snow_instance: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+    restart_policy: always
+    is_enabled: True
+    state: present
+eda_user_tokens:
+  - name: aap-token
+    description: Default AAP Access Token
+    token: "{{ awx_token }}"

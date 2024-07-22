@@ -1,0 +1,38 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: developer-hub-app-config
+  namespace: {{ rhdh_namespace }}
+data:
+  app-config-rhdh.yaml: |
+    app:
+      title: Red Hat Developer Hub
+      baseUrl: https://{{ rhdh_hostname }}/
+    integrations:
+      github:
+        - host: github.com
+          token: "${GITHUB_ACCESS_TOKEN}"
+    auth:
+      allowGuestAccess: true
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: "${GITHUB_CLIENT_ID}"
+            clientSecret: "${GITHUB_CLIENT_SECRET}"
+    enabled:
+      github: true
+    backend:
+      auth:
+        keys:
+          - secret: "${BACKEND_SECRET}"
+      baseUrl: https://{{ rhdh_hostname }}/
+      cors:
+        origin: https://{{ rhdh_hostname }}/
+    permission:
+      enabled: true
+      rbac:
+        admin:
+          users:
+            - name: user:default/{{ rhdh_github_username }}

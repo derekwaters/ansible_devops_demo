@@ -1,0 +1,18 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: developer-hub-dynamic-plugins
+  namespace: {{ rhdh_namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ rhdh_instance_name }}
+    app.kubernetes.io/name: backstage
+    rhdh.redhat.com/app: backstage-{{ rhdh_instance_name }}
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-rbac'
+        disabled: false
+        integrity: sha512-zAKDnvMUv6zwMLx6GIrQDZ+M0D2pcqbZTgG7xqvPJj15j2ZuoJLPmLH7zQM9hdDfKWag0cqoPlP27139klr50Q==

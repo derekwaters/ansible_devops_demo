@@ -1,0 +1,86 @@
+---
+# Details of a ServiceNow host
+snow_hostname: https://dev123456.service-now.com
+snow_username: admin
+snow_password: Password1
+
+controller_organizations:
+  - name: "midrange"
+    description: "MidRange Incidents Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+controller_projects:
+  - name: "augment-incident-project"
+    description: "ServiceNow Incident Augmentation Demo"
+    organization: "midrange"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+controller_credentials:
+  - name: "midrange-network-access"
+    description: "ServiceNow Incident Augmentation Demo"
+    organization: "midrange"
+    credential_type: Machine
+    inputs:
+      username: "demo"
+      password: "not_used"
+    state: present  
+controller_inventories:
+  - name: "midrange-assets"
+    description: "ServiceNow Incident Augmentation Demo"
+    organization: "midrange"
+    state: present
+controller_hosts:
+  - name: "dummy_host"
+    description: "Local Host for Inventory"
+    inventory: "midrange-assets"
+    state: present
+    enabled: true
+    variables:
+      ansible_connection: local  
+controller_templates:
+  - name: "augment-incident"
+    playbook: "demo_snow/playbooks/augment-incident.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-assets"
+    project: "augment-incident-project"
+    ask_variables_on_launch: true
+    extra_vars:
+      snow_instance: "{{ snow_hostname }}"
+      snow_username: "{{ snow_username }}"
+      snow_password: "{{ snow_password }}"
+      dummy_messages_log: >
+        Mar 19 16:11:11 localhost gsd-rfkill[3270]: Error releasing name org.gnome.SettingsDaemon.Rfkill: The connection is closed
+        Mar 19 16:11:11 localhost gsd-datetime[3282]: Error releasing name org.gnome.SettingsDaemon.Datetime: The connection is closed
+        Mar 19 16:11:11 localhost gsd-sound[3290]: Error releasing name org.gnome.SettingsDaemon.Sound: The connection is closed
+        Mar 19 16:11:11 localhost gdm-launch-environment][3099]: GLib-GObject: g_object_unref: assertion G_IS_OBJECT (object) failed
+        Mar 19 16:11:11 localhost systemd-logind[688]: Session c2 logged out. Waiting for processes to exit.
+        Mar 19 16:11:12 localhost gsd-color[2318]: failed to connect to device: Failed to connect to missing device /org/freedesktop/ColorManager/devices/xrandr_Red_Hat__Inc__QEMU_Monitor_gdm_42
+        Mar 19 16:11:12 localhost systemd[1]: session-c2.scope: Deactivated successfully.
+        Mar 19 16:11:12 localhost systemd[1]: session-c2.scope: Consumed 2.094s CPU time.
+        Mar 19 16:11:12 localhost systemd-logind[688]: Removed session c2.
+        Mar 19 16:11:13 localhost systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+      dummy_journal_log: >
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4336] device (enp0s1): state change: ip-check -> secondaries
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4343] device (enp0s1): state change: secondaries -> activated
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4359] manager: NetworkManager state is now CONNECTED_SITE
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4382] device (enp0s1): Activation: successful, device activated.
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4383] manager: NetworkManager state is now CONNECTED_GLOBAL
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4384] manager: startup complete
+        Mar 19 10:25:37 localhost.localdomain NetworkManager[2897]: <info>  [1710804337.4554] agent-manager: agent[dc4fa2df694bfaa3,:1.70/org.gnome.Shell.Net
+        Mar 19 16:10:17 localhost.localdomain NetworkManager[2897]: <info>  [1710825017.3122] agent-manager: agent[78827a5133ae0d11,:1.135/org.gnome.Shell.Ne
+        Mar 19 16:10:27 localhost.localdomain NetworkManager[2897]: <info>  [1710825027.2243] policy: set-hostname: set hostname to localhost.localdomain
+        Mar 19 16:10:43 localhost.localdomain NetworkManager[2897]: <info>  [1710825043.0326] policy: set-hostname: set hostname to localhost.localdomain
+    credentials:
+      - "midrange-network-access"
+    state: present
+...

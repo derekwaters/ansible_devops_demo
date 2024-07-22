@@ -1,0 +1,18 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: developer-hub-rbac-policy
+  namespace: {{ rhdh_namespace }}
+data:
+  rbac-policy.csv: |
+    p, role:default/team-x, catalog-entity, read, allow
+    p, role:default/team-x, catalog.entity.create, create, allow
+    p, role:default/team-x, catalog.entity.create, read, allow
+    p, role:default/team-x, catalog.entity.delete, delete, deny
+    p, role:default/team-x, catalog.location.create, create, allow
+    p, role:default/team-x, catalog.location.read, read, allow
+    p, role:default/team-x, policy-entity, create, allow
+    p, role:default/team-x, policy-entity, read, allow
+
+    g, user:default/{{ rhdh_github_username }}, role:default/team-x
