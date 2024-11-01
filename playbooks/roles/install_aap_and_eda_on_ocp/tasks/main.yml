@@ -9,15 +9,14 @@
       validate_certs: false
     aap_ocp_install_namespace: aap
     aap_ocp_install_operator:
-      channel: "stable-2.4"
-    aap_ocp_install_controller:
+      channel: "stable-2.5"
+    aap_ocp_install_platform:
+      namespace: aap
       instance_name: demo-aap
+    aap_ocp_install_controller:
       replicas: 1
-      link_text: "Ansible Automation Platform"
     aap_ocp_install_eda:
-      instance_name: demo-eda
       replicas: 1
-      link_text: "Ansible Automation Platform EDA"
 
   block:
     - name: Install AAP and EDA
@@ -62,7 +61,7 @@
         api_version: v1
         kind: Secret
         namespace: aap
-        name: demo-eda-admin-password
+        name: demo-aap-eda-admin-password
       register: eda_admin_pwd
       until: "eda_admin_pwd.resources | length > 0"
       retries: 10
@@ -77,13 +76,16 @@
         state: absent
         api_key: "{{ __aap_ocp_install_auth_results['openshift_auth']['api_key'] }}"
       changed_when: false
+      ignore_errors: true
 
     # Set facts for the deploy_demo role
     - name: Set facts for demo deployment
       ansible.builtin.set_fact:
-        controller_hostname: "{{ __aap_ocp_install_controller_route }}"
+      # NOTE: In AAP 2.5, both controller and EDA are accessed via the same gateway route
+      # and use the same user credentials
+        controller_hostname: "{{ __aap_ocp_install_platform_route }}"
         controller_username: "admin"
         controller_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
-        eda_host: "{{ __aap_ocp_install_eda_route }}"
+        eda_host: "{{ __aap_ocp_install_platform_route }}"
         eda_username: "admin"
-        eda_password: "{{ eda_admin_pwd.resources[0].data.password | b64decode }}"
+        eda_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
