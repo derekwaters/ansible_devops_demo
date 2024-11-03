@@ -1,18 +1,10 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: platform
     description: Platform Team
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
       
   - name: user
     description: User Team
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 ...

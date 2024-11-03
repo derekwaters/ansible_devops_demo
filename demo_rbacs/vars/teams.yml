@@ -1,5 +1,5 @@
 ---
-controller_teams:
+aap_teams:
   - name: "dev-team"
     description: "Application Development Team"
     organization: "user"

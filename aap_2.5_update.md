@@ -3,6 +3,8 @@ Changes for CaC for AAP 2.5:
 - Need to use the modified infra.aap_utilities collection with the updated ocp role
 - controller_hostname needs to have https:// on the front (for the ansible.eda collection - ansible.controller doesn't care)
 - controller_organizations needs to be changed to aap_organizations
+- controller_teams needs to be changed to aap_teams
+- controller_user_accounts needs to be changed to aap_user_accounts
 - The default DEs/EEs/credentials (eg. ah_published) do not get created by default
 - EDA objects (projects, DEs, activations etc) need organization: values
 - In EDA, instead of an awx_token you now need to specify an eda credential:

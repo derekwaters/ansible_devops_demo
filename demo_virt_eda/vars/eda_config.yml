@@ -2,18 +2,30 @@
 eda_projects:
   - name: virt-eda-demo
     description: OCPVirt EDA Demo
+    organization: virtualization
     url: https://github.com/derekwaters/ansible_devops_demo
 eda_decision_environments:
   - name: virt-eda-demo-de
     description: OCPVirt EDA Demo
+    organization: virtualization
     image_url: "registry.redhat.io/ansible-automation-platform-24/de-supported-rhel8"
+eda_credentials:
+  - name: aap_access
+    description: aap_access
+    credential_type: "Red Hat Ansible Automation Platform"
+    organization: virtualization
+    inputs:
+      host: "{{ controller_hostname }}"
+      username: "{{ controller_username }}"
+      password: "{{ controller_password }}"
 eda_rulebook_activations:
   - name: virt-eda-demo-activation
     description: OCPVirt EDA Demo
     project: virt-eda-demo
     rulebook: ocpvirt-new-vm.yml
     decision_environment: virt-eda-demo-de
-    awx_token: "aap_token"
+    eda_credentials:
+      - "aap_access"
     extra_vars:
       kafkatopic: "{{ kafkatopic | default('eda-topic') }}"
       kafkahostname: "{{ kafkahostname }}"
@@ -23,7 +35,3 @@ eda_rulebook_activations:
     restart_policy: always
     is_enabled: True
     state: present
-eda_user_tokens:
-  - name: aap_token
-    description: Default AAP Access Token
-    token: "{{ awx_token }}"

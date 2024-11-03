@@ -1,12 +1,8 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "virtualization"
     description: "Virtualization Team"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 
 controller_credentials:
   - name: "ocp-api-token"

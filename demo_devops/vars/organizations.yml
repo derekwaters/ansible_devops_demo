@@ -1,18 +1,10 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "{{ org_platform.name }}"
     description: "{{ org_platform.description }}"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
       
   - name: "{{ org_app.name }}"
     description: "{{ org_app.description }}"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 ...

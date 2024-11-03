@@ -1,22 +1,14 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "aap"
     description: "Automation Platform Organization"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 
   - name: "midrange"
     description: "Midrange Organization"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 
-controller_teams:
+aap_teams:
   - name: "aix"
     description: "AIX Team"
     organization: "midrange"

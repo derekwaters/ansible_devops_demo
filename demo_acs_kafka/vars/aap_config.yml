@@ -1,12 +1,8 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "midrange"
     description: "MidRange Incidents Team"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
 controller_projects:
   - name: "acs-kafka-project"
     description: "ACS Kafka Broker Demo"
