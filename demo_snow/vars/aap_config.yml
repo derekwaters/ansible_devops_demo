@@ -4,14 +4,14 @@ snow_hostname: https://dev123456.service-now.com
 snow_username: admin
 snow_password: Password1
 
-controller_organizations:
+aap_organizations:
   - name: "midrange"
     description: "MidRange Incidents Team"
     state: present
-    galaxy_credentials:
-      - ah_published
-      - ah_certified
-      - ah_community
+#    galaxy_credentials:
+#      - ah_published
+#      - ah_certified
+#      - ah_community
 controller_projects:
   - name: "augment-incident-project"
     description: "ServiceNow Incident Augmentation Demo"

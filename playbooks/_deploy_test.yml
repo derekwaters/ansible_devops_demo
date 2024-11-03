@@ -1,16 +1,20 @@
 ---
 - name: Setup Demo Environment
   hosts: all
-
+  vars:
+    controller_hostname: "https://demo-aap-aap.apps.cluster-2vvh9.2vvh9.sandbox601.opentlc.com"
+    controller_username: "admin"
+    controller_password: "HNaUg4zLv26q6QF8hENEEk1VQ8M8axZm"
+    aap_configuration_secure_logging: False
+    
   tasks:
-
-    - name: Install AAP and EDA
-      ansible.builtin.include_role:
-        name: "install_aap_and_eda_on_ocp"
-
     # Details on how to get a subscription manifest to license AAP can be found here:
     # https://docs.ansible.com/automation-controller/4.4/html/userguide/import_license.html#obtain-sub-manifest
     #
+    - name: Just checking
+      ansible.builtin.debug:
+        msg: "host is {{ controller_hostname }} pwd is {{ controller_password }}"
+        
     - name: License AAP
       ansible.controller.license:
         manifest: "{{ aap_manifest_path }}"
@@ -23,11 +27,12 @@
 
     - name: Set variables for the infra controller
       ansible.builtin.set_fact:
-        # NOTE: ansible.eda *requires* the hostname have https at the start
-        # even though ansible.controller does not. Sigh.
-        controller_hostname: "https://{{ controller_hostname }}"
+        controller_hostname: "{{ controller_hostname }}"
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
+        aap_hostname: "{{ controller_hostname }}"
+        aap_username: "{{ controller_username }}"
+        aap_password: "{{ controller_password }}"
 
     - name: Load the Kafka demo definition files
       ansible.builtin.include_vars:

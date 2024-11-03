@@ -3,17 +3,31 @@ eda_projects:
   - name: augment-incident-project
     description: ServiceNow Incident Augmentation Demo
     url: https://github.com/derekwaters/ansible_devops_demo
+    organization: midrange
 eda_decision_environments:
   - name: augment-incident-de
     description: ServiceNow Incident Augmentation Demo (with cloin SNOW collection)
     image_url: "quay.io/rh-ee-dwaters/snow-de"
+    organization: midrange
+eda_credentials:
+  - name: aap_access
+    description: aap_access
+    credential_type: "Red Hat Ansible Automation Platform"
+    organization: midrange
+    inputs:
+      host: "{{ controller_hostname }}"
+      username: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+
 eda_rulebook_activations:
   - name: augment-incident
     description: ServiceNow Incident Augmentation Demo
     project: augment-incident-project
     rulebook: snow_incident_listener.yml
     decision_environment: augment-incident-de
-    awx_token: "aap-token"
+    eda_credentials:
+      - "aap_access"
+    organization: midrange
     extra_vars:
       snow_instance: "{{ snow_hostname }}"
       snow_username: "{{ snow_username }}"
@@ -21,7 +35,3 @@ eda_rulebook_activations:
     restart_policy: always
     is_enabled: True
     state: present
-eda_user_tokens:
-  - name: aap-token
-    description: Default AAP Access Token
-    token: "{{ awx_token }}"
