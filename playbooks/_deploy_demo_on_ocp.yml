@@ -28,6 +28,9 @@
         controller_hostname: "https://{{ controller_hostname }}"
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
+        aap_hostname: "https://{{ controller_hostname }}"
+        aap_username: "{{ controller_username }}"
+        aap_password: "{{ controller_password }}"
 
     - name: Load the Kafka demo definition files
       ansible.builtin.include_vars:
