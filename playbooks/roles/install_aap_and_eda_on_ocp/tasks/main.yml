@@ -14,9 +14,13 @@
       namespace: aap
       instance_name: demo-aap
     aap_ocp_install_controller:
+      instance_name: demo-aap
       replicas: 1
+      link_text: "Ansible Automation Platform"
     aap_ocp_install_eda:
+      instance_name: demo-eda
       replicas: 1
+      link_text: "Ansible Automation Platform EDA"
 
   block:
     - name: Install AAP and EDA
@@ -61,11 +65,12 @@
         api_version: v1
         kind: Secret
         namespace: aap
-        name: demo-aap-eda-admin-password
+        name: demo-eda-admin-password
       register: eda_admin_pwd
       until: "eda_admin_pwd.resources | length > 0"
       retries: 10
       delay: 30
+      when: not __aap_ocp_install_25_install
 
     - name: "If login succeeded revoke OpenShift API token (again)"
       when: __aap_ocp_install_auth_results['openshift_auth']['api_key'] is defined and aap_ocp_install_connection['api_key'] is not defined
@@ -89,3 +94,15 @@
         eda_host: "{{ __aap_ocp_install_platform_route }}"
         eda_username: "admin"
         eda_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
+      when: __aap_ocp_install_25_install
+
+    - name: Set facts for demo deployment
+      ansible.builtin.set_fact:
+        controller_hostname: "{{ __aap_ocp_install_controller_route }}"
+        controller_username: "admin"
+        controller_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
+        eda_host: "{{ __aap_ocp_install_eda_route }}"
+        eda_username: "admin"
+        eda_password: "{{ eda_admin_pwd.resources[0].data.password | b64decode }}"
+      when: not __aap_ocp_install_25_install
+
