@@ -90,4 +90,12 @@ controller_roles:
       - platform-inventory
     organization: "user"
     state: present
+
+
+  - team: "dev-team"
+    lookup_organization: "user"
+    role: "execute"
+    job_template: "platform_debug"
+    state: present
+
 ...

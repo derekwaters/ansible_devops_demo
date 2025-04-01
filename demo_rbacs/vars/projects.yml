@@ -11,4 +11,17 @@ controller_projects:
     update_project: true
     wait: true
     state: present
+
+
+  - name: platform-tools
+    description: Provide platform-level tools for tenant teams
+    organization: platform
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
 ...
