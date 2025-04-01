@@ -13,7 +13,7 @@ controller_templates:
   - name: "platform_debug"
     playbook: "demo_rbacs/playbooks/test_inventory.yml"
     job_type: "run"
-    organization: "user"
+    organization: "platform"
     ask_inventory_on_launch: true
     ask_credential_on_launch: true
     project: "platform-tools"

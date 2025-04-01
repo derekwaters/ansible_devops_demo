@@ -30,7 +30,17 @@
     webhook_key: "{{ key_deets.webhook_key }}"
   when: webhook_workflow_template is defined
 
-
+- name: Create an EDA 'application'
+  ansible.controller.application:
+    name: "eda"
+    description: "EDA Access Application"
+    organization: "Default"
+    state: present
+    authorization_grant_type: password
+    client_type: public
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
 
 - name: Create a user access token for EDA
   ansible.controller.token:
