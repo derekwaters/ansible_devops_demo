@@ -1,0 +1,12 @@
+---
+- name: Launch the inventory test
+  hosts: all
+
+  tasks:
+    - name: Wait for a bit
+      ansible.builtin.pause:
+        minutes: 5
+
+    - name: Show me all the things
+      ansible.builtin.debug:
+        var: ansible_facts
