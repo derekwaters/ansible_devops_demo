@@ -1,6 +1,7 @@
 ---
 - name: Launch the inventory test
   hosts: all
+  connection: local
   
   tasks:
     - name: Show me all the things

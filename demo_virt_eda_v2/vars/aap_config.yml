@@ -24,7 +24,8 @@ controller_credentials:
     credential_type: "Machine"
     inputs:
       username: "fedora"
-      password: "fedora"
+      ssh_key_data: "{{ ocp_ssh_access_private_key }}"
+      # TODO: Generate this data
   - name: "containergroup-sa-token"
     description: "OpenShift API Service Account Token"
     organization: "virtualization"
@@ -71,6 +72,7 @@ controller_inventory_sources:
     organization: "virtualization"
     source_project: "ocpvirt-inventory"
     credential: "ocp-api-token"
+    # TODO: This should use a service account token
     verbosity: 2
     overwrite: true
     state: present
@@ -95,6 +97,8 @@ controller_instance_groups:
         serviceAccountName: containergroup-service-account
         automountServiceAccountToken: false
         containers:
+          image: >-
+            registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8@sha256:880dadb7f632ba574721e94aaa1909993ec7b36101001101395a26d1ae379627
           name: worker
           args:
             - ansible-runner
@@ -129,7 +133,6 @@ controller_templates:
     project: "ocpvirt-project"
     execution_environment: "infra-ee"
     ask_variables_on_launch: true
-    # limit: "namespace_{{ vmnamespace | default('vms-namespace') | replace('-', '_') }}"
     extra_vars:
       controller_hostname: "{{ controller_hostname }}"
       controller_username: "{{ controller_username }}"
@@ -147,7 +150,8 @@ controller_templates:
     ask_variables_on_launch: true
     extra_vars:
       ocp_host: "{{ ocp_host }}"
-      ocp_token: "{{ ocp_token }}"
+      ocp_token: "{{ ocp_sa_token }}"
+      # TODO: Make this the OCPVirt service account token
       snow_instance: "{{ snow_instance }}"
       snow_username: "{{ snow_username }}"
       snow_password: "{{ snow_password }}"

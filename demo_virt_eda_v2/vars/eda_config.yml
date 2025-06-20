@@ -7,17 +7,22 @@ eda_decision_environments:
   - name: virt-eda-demo-de
     description: OCPVirt EDA Demo
     image_url: "registry.redhat.io/ansible-automation-platform-24/de-supported-rhel8"
+  - name: virt-eda-demo-certs-de
+    description: OCPVirt EDA Demo DE with Kafka CA cert integration
+    image_url: quay.io/rh-ee-dwaters/de_kafka_certs
+    # TODO: Find a way to build this automatically, or inject the cert at runtime
 eda_rulebook_activations:
   - name: virt-eda-demo-activation
     description: OCPVirt EDA Demo
     project: virt-eda-demo
-    rulebook: ocpvirt-new-vm-events.yml
-    decision_environment: virt-eda-demo-de
+    rulebook: ocpvirt-new-vm-events-certs.yml
+    decision_environment: virt-eda-demo-certs-de
     awx_token: "aap_token"
     extra_vars:
       kafkatopic: "{{ kafkatopic | default('cluster-events-topic') }}"
       kafkahostname: "{{ kafkahostname }}"
       kafkaport: "{{ kafkaport | default(9092) }}"
+      # TODO: Port is 443
       kafkagroupid: "{{ kafkagroupid | default('eda_group') }}"
       vmnamespace: "{{ vmnamespace | default('vms-namespace') }}"
     restart_policy: always

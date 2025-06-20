@@ -31,8 +31,7 @@ controller_roles:
     state: present
 
   - user: "debra"
-    lookup_organization: "user"
-    team: "dev-team"
+    target_team: "dev-team"
     role: member
     state: present
 
@@ -79,8 +78,7 @@ controller_roles:
 
 
   - user: "paul"
-    lookup_organization: "platform"
-    team: "platform-team"
+    target_team: "platform-team"
     role: member
     state: present
 
@@ -88,6 +86,17 @@ controller_roles:
     role: "use"
     inventories:
       - platform-inventory
-    organization: "user"
     state: present
+
+  - team: "dev-team"
+    role: "execute"
+    job_template: "platform_debug"
+    state: present
+
+  - team: "dev-team"
+    role: use
+    credentials: 
+      - "test-user-credential"
+    state: present
+
 ...

@@ -4,6 +4,8 @@
   connection: local
   
   tasks:
+    # TODO: Add a task to wait until the new VM is in "Running" state
+
     - name: Force a dynamic inventory refresh
       ansible.controller.inventory_source_update:
         controller_host: "{{ controller_hostname }}"
