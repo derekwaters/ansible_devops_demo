@@ -1,0 +1,45 @@
+---
+- name: Perform forensics on a compromised server and then isolate it from the network
+  hosts: all
+  become: yes
+  tasks:
+    - name: Gather running processes
+      ansible.builtin.shell: ps aux
+      register: processes
+
+    - name: Save process list
+      ansible.builtin.copy:
+        content: "{{ processes.stdout }}"
+        dest: /tmp/forensics_processes.txt
+
+    - name: Gather open network connections
+      ansible.builtin.shell: netstat -tulnp
+      register: netstat
+
+    - name: Save network connections
+      ansible.builtin.copy:
+        content: "{{ netstat.stdout }}"
+        dest: /tmp/forensics_netstat.txt
+
+    - name: Gather open files
+      ansible.builtin.shell: lsof
+      register: lsof
+
+    - name: Save open files
+      ansible.builtin.copy:
+        content: "{{ lsof.stdout }}"
+        dest: /tmp/forensics_lsof.txt
+
+    - name: Isolate server by disabling network interfaces (except loopback)
+      ansible.builtin.shell: |
+        for iface in $(ls /sys/class/net | grep -v lo); do
+          ip link set $iface down
+        done
+      ignore_errors: yes
+
+    - name: Block all incoming/outgoing traffic except SSH (optional)
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: all
+        jump: DROP
+      ignore_errors: yes

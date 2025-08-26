@@ -1,0 +1,35 @@
+---
+- name: Generate a new SSL certificate for application server
+  hosts: all
+  become: yes
+  vars:
+    cert_path: /etc/ssl/certs/app_server.crt
+    key_path: /etc/ssl/private/app_server.key
+    csr_path: /etc/ssl/certs/app_server.csr
+    common_name: app.example.com
+
+  tasks:
+    - name: Generate private key
+      community.crypto.openssl_privatekey:
+        path: "{{ key_path }}"
+        size: 2048
+        type: RSA
+
+    - name: Generate CSR
+      community.crypto.openssl_csr:
+        path: "{{ csr_path }}"
+        privatekey_path: "{{ key_path }}"
+        common_name: "{{ common_name }}"
+
+    - name: Generate self-signed certificate
+      community.crypto.openssl_certificate:
+        path: "{{ cert_path }}"
+        privatekey_path: "{{ key_path }}"
+        csr_path: "{{ csr_path }}"
+        provider: selfsigned
+        days: 365
+
+    - name: Install the new certificate in the application folder
+      ansible.builtin.copy:
+        src: "{{ cert_path }}"
+        dest: /var/myapp/certs/

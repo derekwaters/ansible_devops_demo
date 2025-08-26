@@ -1,0 +1,27 @@
+---
+- name: Restart the web application
+  hosts: all
+  vars:
+    service_name: 'httpd'
+
+  tasks:
+    - name: Check the status of the services
+      ansible.builtin.service_facts:
+      register: service_status
+
+    - name: Print the status of the service
+      ansible.builtin.debug:
+        var: service_status.services[service_name]
+
+    - name: Restart the service
+      ansible.builtin.service:
+        state: restarted
+        name: "{{ service_name }}"
+
+    - name: Get updated service status
+      ansible.builtin.service_facts:
+      register: service_status
+
+    - name: Print the status of the service
+      ansible.builtin.debug:
+        var: service_status.services[service_name]

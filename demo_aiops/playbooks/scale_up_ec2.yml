@@ -1,0 +1,60 @@
+---
+- name: Scale up EC2 instance to a larger instance type by hostname
+  hosts: all
+  gather_facts: no
+  vars:
+    new_instance_type: t2.large
+    region: us-east-1
+
+  tasks:
+    - name: Set the hostname
+      ansible.builtin.set_fact:
+        hostname: "{{ ansible_facts['hostname'] }}"
+
+    - name: Get EC2 instance info
+      amazon.aws.ec2_instance_info:
+        region: "{{ region }}"
+      register: ec2_info
+
+    - name: Find instance_id from hostname
+      set_fact:
+        instance_id: "{{ ec2_info.instances | selectattr('private_dns_name', 'equalto', hostname) | map(attribute='instance_id') | list | first }}"
+      when: ec2_info.instances is defined and ec2_info.instances | length > 0
+
+    - name: Debug instance_id
+      debug:
+        msg: "Instance ID is {{ instance_id }}"
+      when: instance_id is defined
+
+    - name: Stop EC2 instance
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ instance_id }}"
+        state: stopped
+        region: "{{ region }}"
+      register: stop_result
+      when: instance_id is defined
+
+    - name: Wait for instance to stop
+      amazon.aws.ec2_instance_info:
+        instance_ids: "{{ instance_id }}"
+        region: "{{ region }}"
+      register: ec2_info_stop
+      until: ec2_info_stop.instances[0].state.name == "stopped"
+      retries: 10
+      delay: 15
+      when: instance_id is defined
+
+    - name: Change instance type
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ instance_id }}"
+        instance_type: "{{ new_instance_type }}"
+        region: "{{ region }}"
+        state: stopped
+      when: instance_id is defined
+
+    - name: Start EC2 instance
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ instance_id }}"
+        state: running
+        region: "{{ region }}"
+      when: instance_id is defined
