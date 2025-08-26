@@ -1,0 +1,186 @@
+---
+controller_organizations:
+  - name: "security"
+    description: "Security Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+  - name: "midrange"
+    description: "Midrange Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+  - name: "wintel"
+    description: "Wintel Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+  - name: "network"
+    description: "Network Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+
+controller_projects:
+  - name: "security-project"
+    description: "Security Functions"
+    organization: "security"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+  - name: "midrange-project"
+    description: "Midrange Functions"
+    organization: "midrange"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+  - name: "wintel-project"
+    description: "Wintel Functions"
+    organization: "wintel"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+  - name: "network-project"
+    description: "Network Functions"
+    organization: "network"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+
+controller_inventories:
+  - name: "midrange-vms"
+    description: "Midrange Servers"
+    organization: "midrange"
+    state: present
+  - name: "wintel-vms"
+    description: "Windows Servers"
+    organization: "wintel"
+    state: present
+  - name: "network-devices"
+    description: "Network Devices"
+    organization: "network"
+    state: present
+  - name: "secured-servers"
+    description: "Secured Servers"
+    organization: "security"
+    state: present
+
+controller_templates:
+  - name: "scan-system"
+    playbook: "{{ demo_name }}/playbooks/quick_job.yml"
+    job_type: "run"
+    organization: "security"
+    inventory: "secured-servers"
+    project: "security-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "apply-scap-profile"
+    playbook: "{{ demo_name }}/playbooks/medium_job.yml"
+    job_type: "run"
+    organization: "security"
+    inventory: "secured-servers"
+    project: "security-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "patch-server"
+    playbook: "{{ demo_name }}/playbooks/medium_job.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "midrange-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "pull-logs"
+    playbook: "{{ demo_name }}/playbooks/quick_job.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "midrange-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "provision-server"
+    playbook: "{{ demo_name }}/playbooks/slow_job.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "midrange-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "patch-server"
+    playbook: "{{ demo_name }}/playbooks/medium_job.yml"
+    job_type: "run"
+    organization: "wintel"
+    inventory: "wintel-vms"
+    project: "wintel-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "pull-logs"
+    playbook: "{{ demo_name }}/playbooks/quick_job.yml"
+    job_type: "run"
+    organization: "wintel"
+    inventory: "wintel-vms"
+    project: "wintel-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "provision-server"
+    playbook: "{{ demo_name }}/playbooks/slow_job.yml"
+    job_type: "run"
+    organization: "wintel"
+    inventory: "wintel-vms"
+    project: "wintel-project"
+    ask_variables_on_launch: true
+    state: present
+
+  - name: "provision-device"
+    playbook: "{{ demo_name }}/playbooks/slow_job.yml"
+    job_type: "run"
+    organization: "network"
+    inventory: "network-devices"
+    project: "network-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "patch-device"
+    playbook: "{{ demo_name }}/playbooks/medium_job.yml"
+    job_type: "run"
+    organization: "network"
+    inventory: "network-devices"
+    project: "network-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "pull-logfiles"
+    playbook: "{{ demo_name }}/playbooks/quick_job.yml"
+    job_type: "run"
+    organization: "network"
+    inventory: "network-devices"
+    project: "network-project"
+    ask_variables_on_launch: true
+    state: present
+...

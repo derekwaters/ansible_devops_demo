@@ -59,6 +59,15 @@
       ansible.builtin.include_role:
         name: "deploy_demo"
 
+    - name: Check for post-setup playbook
+      ansible.builtin.stat:
+        path: "../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
+      register: __post_setup_file
+
+    - name: Run a post-setup playbook if required for further config
+      ansible.builtin.include_tasks: "../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
+      when: __post_setup_file.stat.exists
+
     - name: Display admin password for AAP
       ansible.builtin.debug:
         msg: "AAP Host is: {{ controller_hostname }} and Admin password is: '{{ controller_password }}'"
@@ -75,4 +84,4 @@
     - name: Display details for RHDH
       ansible.builtin.debug:
         msg: "Developer Hub Host is: {{ rhdh_hostname }}"
-      when: rhdh_hostname is defined 
+      when: rhdh_hostname is defined

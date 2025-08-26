@@ -1,0 +1,67 @@
+---
+- name: Create an empty expanded job_queue
+  ansible.builtin.set_fact:
+    job_queue: []
+
+- name: Add scan-system jobs
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'scan-system', 'organization': 'security'}] }}"
+  loop: "{{ range(300) | list }}"
+
+- name: Add apply-scap-profile jobs
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'apply-scap-profile', 'organization': 'security'}] }}"
+  loop: "{{ range(85) | list }}"
+
+- name: Add patch-server jobs for midrange
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'patch-server', 'organization': 'midrange'}] }}"
+  loop: "{{ range(230) | list }}"
+
+- name: Add pull-logs jobs for midrange
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'pull-logs', 'organization': 'midrange'}] }}"
+  loop: "{{ range(30) | list }}"
+
+- name: Add provision-server jobs for midrange
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'provision-server', 'organization': 'midrange'}] }}"
+  loop: "{{ range(55) | list }}"
+
+- name: Add patch-server jobs for wintel
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'patch-server', 'organization': 'wintel'}] }}"
+  loop: "{{ range(70) | list }}"
+
+- name: Add pull-logs jobs for wintel
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'pull-logs', 'organization': 'wintel'}] }}"
+  loop: "{{ range(15) | list }}"
+
+- name: Add provision-server jobs for wintel
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'provision-server', 'organization': 'wintel'}] }}"
+  loop: "{{ range(10) | list }}"
+
+- name: Add provision-device jobs for network
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'provision-device', 'organization': 'network'}] }}"
+  loop: "{{ range(20) | list }}"
+
+- name: Add patch-device jobs for network
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'patch-device', 'organization': 'network'}] }}"
+  loop: "{{ range(200) | list }}"
+
+- name: Add pull-logs jobs for network
+  ansible.builtin.set_fact:
+    job_queue: "{{ job_queue + [{'name': 'pull-logfiles', 'organization': 'network'}] }}"
+  loop: "{{ range(40) | list }}"
+
+- name: Launch all the jobs in the queue
+  ansible.controller.job_launch:
+    job_template: "{{ item.name }}"
+    organization: "{{ item.organization }}"
+    job_type: run
+    ask_variables_on_launch: true
+  loop: "{{ job_queue }}"

@@ -1,0 +1,16 @@
+---
+- name: Launch the inventory test
+  hosts: all
+
+  tasks:
+    - name: How long will this take?
+      ansible.builtin.set_fact:
+        wait_time: "{{ 5 | ansible.builtin.random + 1 }}"
+
+    - name: Wait for a bit
+      ansible.builtin.pause:
+        minutes: "{{ wait_time }}"
+
+    - name: Show me all the things
+      ansible.builtin.debug:
+        var: ansible_facts
