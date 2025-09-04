@@ -1,5 +1,5 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "aap"
     description: "Automation Platform Organization"
     state: present
@@ -16,7 +16,7 @@ controller_organizations:
       - ah_certified
       - ah_community
 
-controller_teams:
+aap_teams:
   - name: "aix"
     description: "AIX Team"
     organization: "midrange"

@@ -1,5 +1,5 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "virtualization"
     description: "Virtualization Team"
     state: present

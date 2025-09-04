@@ -1,5 +1,5 @@
 ---
-controller_organizations:
+aap_organizations:
   - name: "midrange"
     description: "MidRange Incidents Team"
     state: present

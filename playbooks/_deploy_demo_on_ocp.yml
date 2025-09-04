@@ -15,9 +15,9 @@
       ansible.controller.license:
         manifest: "{{ aap_manifest_path }}"
         state: present
-        tower_host: "{{ controller_hostname }}"
-        tower_username: "{{ controller_username }}"
-        tower_password: "{{ controller_password }}"
+        controller_host: "{{ controller_hostname }}"
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
       retries: 10
       delay: 30
 

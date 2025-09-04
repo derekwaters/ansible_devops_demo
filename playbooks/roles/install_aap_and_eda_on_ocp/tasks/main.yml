@@ -8,24 +8,17 @@
       validate_certs: false
     aap_ocp_install_namespace: aap
     aap_ocp_install_operator:
-      channel: "stable-2.4"
+      channel: "stable-2.5-cluster-scoped"
     aap_ocp_install_platform:
       namespace: aap
       instance_name: demo-aap
     aap_ocp_install_controller:
-      instance_name: demo-aap
-      replicas: 1
-      link_text: "Ansible Automation Platform"
+      install: true
     aap_ocp_install_eda:
-      instance_name: demo-eda
-      replicas: 1
-      link_text: "Ansible Automation Platform EDA"
-    #aap_ocp_install_hub:
-    #  instance_name: demo-hub
-    #  replicas: 1
-    #  link_text: "Ansible Automation Platform Hub"
-    #  storage_type: file
-
+      install: true
+    aap_ocp_install_hub:
+      install: false
+    
   block:
     - name: Install AAP and EDA
       ansible.builtin.include_role:
@@ -92,10 +85,13 @@
       ansible.builtin.set_fact:
       # NOTE: In AAP 2.5, both controller and EDA are accessed via the same gateway route
       # and use the same user credentials
-        controller_hostname: "{{ __aap_ocp_install_platform_route }}"
+        aap_hostname: "{{ aap_ocp_install_platform_route }}"
+        aap_username: "admin"
+        aap_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
+        controller_hostname: "{{ aap_ocp_install_platform_route }}"
         controller_username: "admin"
         controller_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
-        eda_host: "{{ __aap_ocp_install_platform_route }}"
+        eda_host: "{{ aap_ocp_install_platform_route }}"
         eda_username: "admin"
         eda_password: "{{ aap_admin_pwd.resources[0].data.password | b64decode }}"
       when: __aap_ocp_install_25_install
