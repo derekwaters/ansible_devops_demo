@@ -26,7 +26,20 @@ https://demo.redhat.com/catalog?category=Open_Environments&item=babylon-catalog-
 6) Generate an AAP Licensing Manifest File (refer to https://docs.ansible.com/automation-controller/4.4/html/userguide/import_license.html#obtain-sub-manifest for details)
 7) Run the following command (substituting your relevant values):
 
-`ansible-playbook -i <inventory_file> -e ocp_host=https://<OpenShift API Hostname>:6443 -e ocp_username=kubeadmin -e ocp_token=<token> -e snow_instance=<servicenowurl> -e snow_username="<snow_user>" -e snow_password="<servicenow password>" -e aap_manifest_path="<Local Path to AAP Manifest ZIP File for Licensing AAP>" -e demo_name=demo_virt_eda_v2 -e kafkahostname=<kafka_bootstrap> -e ocp_sa_token=<OCP ContainerGroup SA Token> ./playbooks/_deploy_demo_on_ocp.yml`
+`ansible-playbook -i <inventory_file> \
+  -e ocp_host=https://<OpenShift API Hostname>:6443 \
+  -e ocp_token=<token> \
+  -e ocp_virt_token=<token> \
+  -e snow_instance=<servicenowurl> \
+  -e snow_username="<snow_user>" \
+  -e snow_password="<servicenow password>" \
+  -e aap_manifest_path="<Local Path to AAP Manifest ZIP File for Licensing AAP>" \
+  -e demo_name=demo_virt_eda_v2 \
+  -e kafkahostname=<kafka_bootstrap> \
+  -e kafkacertdata=<ca.crt data for kafka> \
+  ./playbooks/_deploy_demo_on_ocp.yml`
+
+# NOTE: In this case, the ocp_token is for the OCP cluster to host AAP and associated data. The ocp_virt_token is for the OCP cluster hosting OCPVirt. 
 
 8) Perform the remaining config for OCP Virt
 

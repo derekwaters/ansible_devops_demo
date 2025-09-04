@@ -1,0 +1,14 @@
+---
+# OCP Connection Information
+ocp_host: openshift.localdomain
+ocp_username: admin
+ocp_password: password
+opa_namespace: "opa"
+opa_rego: |
+    package example
+
+    greeting := msg if {
+        info := opa.runtime()
+        hostname := info.env["HOSTNAME"] # Kubernetes sets the HOSTNAME environment variable.
+        msg := sprintf("hello from pod %q!", [hostname])
+    }

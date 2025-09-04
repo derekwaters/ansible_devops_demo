@@ -1,0 +1,79 @@
+---
+controller_organizations:
+  - name: "midrange"
+    description: "Midrange Team"
+    state: present
+    galaxy_credentials:
+      - ah_published
+      - ah_certified
+      - ah_community
+
+controller_projects:
+  - name: "aiops-project"
+    description: "AIOps Playbooks"
+    organization: "midrange"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+
+controller_inventories:
+  - name: "midrange-vms"
+    description: "Midrange Servers"
+    organization: "midrange"
+    state: present
+
+controller_templates:
+  - name: "01_expand_disk"
+    playbook: "{{ demo_name }}/playbooks/expand_disk.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "02_forensic_isolation"
+    playbook: "{{ demo_name }}/playbooks/forensic_isolation.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "03_renew_certificate"
+    playbook: "{{ demo_name }}/playbooks/renew_certificate.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "04_restart_application"
+    playbook: "{{ demo_name }}/playbooks/restart_application.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "05_scale_down_ec2"
+    playbook: "{{ demo_name }}/playbooks/scale_down_ec2.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "06_scale_up_ec2"
+    playbook: "{{ demo_name }}/playbooks/scale_up_ec2.yml"
+    job_type: "run"
+    organization: "midrange"
+    inventory: "midrange-vms"
+    project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+...

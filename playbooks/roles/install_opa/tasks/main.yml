@@ -1,0 +1,150 @@
+---
+- name: Perform a set of OpenShift API calls
+  block:
+
+    - name: Log in to the OpenShift API
+      redhat.openshift.openshift_auth:
+        host: "{{ ocp_host }}"
+        username: "{{ ocp_username }}"
+        password: "{{ ocp_password }}"
+        validate_certs: false
+        state: present
+      register: openshift_auth_results
+      when: ocp_token is not defined
+
+    - name: Set the token
+      ansible.builtin.set_fact:
+        __ocp_api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+      when: ocp_token is not defined
+      
+    - name: Set the token
+      ansible.builtin.set_fact:
+        __ocp_api_key: "{{ ocp_token }}"
+      when: ocp_token is defined
+
+    - name: Create RHDH operator namespace in OpenShift
+      redhat.openshift.k8s:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        name: rhdh-operator
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Create RHDH namespace in OpenShift
+      redhat.openshift.k8s:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        name: "{{ rhdh_namespace }}"
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Create operator group for RHDH Operator
+      redhat.openshift.k8s:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        api_version: operators.coreos.com/v1
+        kind: OperatorGroup
+        resource_definition:
+          metadata:
+            name: rhdh-operator-group
+            namespace: rhdh-operator
+          spec:
+            upgradeStrategy: Default
+        state: present
+
+    - name: Install RHDH Operator
+      redhat.openshift.k8s:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        api_version: operators.coreos.com/v1alpha1
+        kind: Subscription
+        resource_definition:
+          metadata:
+            name: rhdh
+            namespace: rhdh-operator
+          spec:
+            channel: 'fast'
+            installPlanApproval: Automatic
+            name: rhdh
+            source: redhat-operators
+            sourceNamespace: openshift-marketplace
+            startingCSV: rhdh-operator.v1.2.0-0.1719307450.p
+        state: present
+
+    - name: Wait for the operator to be available
+      kubernetes.core.k8s_info:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        kind: Subscription
+        namespace: rhdh-operator
+        name: 'rhdh'
+        api_version: 'operators.coreos.com/v1alpha1'
+      register: operatordetails
+      until: (operatordetails['resources'][0]['status']['state'] is defined) and (operatordetails['resources'][0]['status']['state'] == 'AtLatestKnown')
+      retries: 10
+      delay: 30
+
+    - name: Install Developer Hub
+      redhat.openshift.k8s:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        api_version: rhdh.redhat.com/v1alpha1
+        kind: Backstage
+        resource_definition:
+          metadata:
+            name: "{{ rhdh_instance_name }}"
+            namespace: "{{ rhdh_namespace }}"
+          spec:
+            application:
+              appConfig:
+                mountPath: /opt/app-root/src
+              extraFiles:
+                mountPath: /opt/app-root/src
+              replicas: 1
+              route:
+                enabled: true
+            database:
+              enableLocalDb: true
+        state: present
+      retries: 10
+      delay: 30
+
+    - name: Get Developer Hub URL (when Developer Hub Instance is available)
+      kubernetes.core.k8s_info:
+        api_key: "{{ __ocp_api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+        api_version: v1
+        kind: Route
+        namespace: "{{ rhdh_namespace }}"
+        name: "backstage-{{ rhdh_instance_name }}"
+      register: _rhdh_route_details
+      until: "_rhdh_route_details.resources | length > 0"
+      retries: 10
+      delay: 30
+
+    - name: Debug service
+      ansible.builtin.debug:
+        var: _rhdh_route_details.resources
+
+    - name: Set RHDH hostname
+      ansible.builtin.set_fact:
+        rhdh_hostname: "{{ _rhdh_route_details.resources[0].spec.host }}"
+
+  always:
+    - name: If login succeeds, revoke the API key
+      when: openshift_auth_results.openshift_auth.api_key is defined
+      redhat.openshift.openshift_auth:
+        state: absent
+        api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+      ignore_errors: true

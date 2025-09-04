@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  author: "dwaters@redhat.com"
+  description: "Install OpenPolicyAgent on OpenShift"
+  company: "Red Hat"
+
+  # If the issue tracker for your role is not on github, uncomment the
+  # next line and provide a value
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  license: "license (BSD-3-Clause)"
+
+  min_ansible_version: "2.1"
+
+  dependencies:
+    - redhat.openshift
+
+  galaxy_tags:
+    - opa
+    - OpenPolicyAgent
+    - rego
+    - OpenShift
+    - ocp
+    - demo

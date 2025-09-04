@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-policy
+  namespace: opa
+data:
+  example.rego: |-
+    package example
+
+    greeting := msg if {
+        info := opa.runtime()
+        hostname := info.env["HOSTNAME"] # Kubernetes sets the HOSTNAME environment variable.
+        msg := sprintf("hello from pod %q!", [hostname])
+    }
