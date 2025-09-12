@@ -23,9 +23,32 @@ controller_inventories:
     organization: "midrange"
     state: present
 
+controller_hosts:
+  - name: "app-web-01"
+    inventory: "midrange-vms"
+    description: "Application Web Server 01"
+    enabled: true
+  - name: "app-web-02"
+    inventory: "midrange-vms"
+    description: "Application Web Server 02"
+    enabled: true
+  - name: "app-db-01"
+    inventory: "midrange-vms"
+    description: "Application Database Server 01"
+    enabled: true
+  - name: "app-db-02"
+    inventory: "midrange-vms"
+    description: "Application Database Server 02"
+    enabled: true
+  - name: "app-audit-01"
+    inventory: "midrange-vms"
+    description: "Application Audit Server 01"
+    enabled: true
+
 controller_templates:
   - name: "01_expand_disk"
     playbook: "{{ demo_name }}/playbooks/expand_disk.yml"
+    description: "Expand the available disk space on a server using lvm"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
@@ -34,6 +57,7 @@ controller_templates:
     state: present
   - name: "02_forensic_isolation"
     playbook: "{{ demo_name }}/playbooks/forensic_isolation.yml"
+    description: "Isolate a server from the network for forensic analysis"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
@@ -42,6 +66,7 @@ controller_templates:
     state: present
   - name: "03_renew_certificate"
     playbook: "{{ demo_name }}/playbooks/renew_certificate.yml"
+    description: "Renew an application web serving TLS certificate"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
@@ -50,6 +75,7 @@ controller_templates:
     state: present
   - name: "04_restart_application"
     playbook: "{{ demo_name }}/playbooks/restart_application.yml"
+    description: "Restart a failed application service"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
@@ -58,6 +84,7 @@ controller_templates:
     state: present
   - name: "05_scale_down_ec2"
     playbook: "{{ demo_name }}/playbooks/scale_down_ec2.yml"
+    description: "Scale down an AWS EC2 instance to a smaller size with reduced compute and memory resources"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
@@ -66,6 +93,7 @@ controller_templates:
     state: present
   - name: "06_scale_up_ec2"
     playbook: "{{ demo_name }}/playbooks/scale_up_ec2.yml"
+    description: "Scale up an AWS EC2 instance to a larger size with increased compute and memory resources"
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
