@@ -4,6 +4,32 @@ aap_organizations:
     description: "Midrange Team"
     state: present
 
+aap_teams:
+  - name: "Midrange Admins"
+    description: "Midrange Admins Team"
+    organization: "midrange"
+    state: present
+
+aap_user_accounts:
+  - username: "midrange_admin"
+    is_superuser: false
+    password: "abc123"
+    email: "midrange@example.com"
+    state: present
+
+controller_roles:
+  - user: "midrange_admin"
+    target_team: "Midrange Admins"
+    roles:
+      - "member"
+    state: present
+  - team: "Midrange Admins"
+    organization: "midrange"
+    roles:
+      - "execute"
+      - "read"
+    state: present
+
 controller_projects:
   - name: "aiops-project"
     description: "AIOps Playbooks"
@@ -16,6 +42,15 @@ controller_projects:
     update_project: true
     wait: true
     state: present
+
+controller_credentials:
+  - name: "midrange-creds"
+    description: "Midrange Server Credentials"
+    organization: "midrange"
+    credential_type: "Machine"
+    inputs:
+      username: "aap"
+      password: "invalid_password"
 
 controller_inventories:
   - name: "midrange-vms"
@@ -52,6 +87,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
@@ -61,6 +98,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
@@ -70,6 +109,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
@@ -79,6 +120,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
@@ -88,6 +131,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
@@ -97,6 +142,8 @@ controller_templates:
     job_type: "run"
     organization: "midrange"
     inventory: "midrange-vms"
+    credentials:
+      - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
     state: present
