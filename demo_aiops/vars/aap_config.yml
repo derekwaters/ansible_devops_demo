@@ -3,6 +3,9 @@ aap_organizations:
   - name: "midrange"
     description: "Midrange Team"
     state: present
+  - name: "secure"
+    description: "Secure Zone"
+    state: present
 
 aap_teams:
   - name: "Midrange Admins"
@@ -42,6 +45,17 @@ controller_projects:
     update_project: true
     wait: true
     state: present
+  - name: "secure-project"
+    description: "Secure Playbooks"
+    organization: "secure"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
 
 controller_credentials:
   - name: "midrange-creds"
@@ -56,6 +70,10 @@ controller_inventories:
   - name: "midrange-vms"
     description: "Midrange Servers"
     organization: "midrange"
+    state: present
+  - name: "secure-vms"
+    description: "Secure Zone Servers"
+    organization: "secure"
     state: present
 
 controller_hosts:
@@ -78,6 +96,10 @@ controller_hosts:
   - name: "app-audit-01"
     inventory: "midrange-vms"
     description: "Application Audit Server 01"
+    enabled: true
+  - name: "secure-host-001"
+    inventory: "secure-vms"
+    description: "Secure Zone Host 001"
     enabled: true
 
 controller_templates:
@@ -145,6 +167,15 @@ controller_templates:
     credentials:
       - "midrange-creds"
     project: "aiops-project"
+    ask_variables_on_launch: true
+    state: present
+  - name: "secure_restart_server"
+    playbook: "{{ demo_name }}/playbooks/secure_restart.yml"
+    description: "Restart high compliance server in the secure zone"
+    job_type: "run"
+    organization: "secure"
+    inventory: "secure-vms"
+    project: "secure-project"
     ask_variables_on_launch: true
     state: present
 ...

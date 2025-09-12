@@ -1,7 +1,7 @@
 ---
 - name: Perform forensics on a compromised server and then isolate it from the network
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Gather running processes
       ansible.builtin.shell: ps aux
@@ -35,11 +35,11 @@
         for iface in $(ls /sys/class/net | grep -v lo); do
           ip link set $iface down
         done
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Block all incoming/outgoing traffic except SSH (optional)
       ansible.builtin.iptables:
         chain: INPUT
         protocol: all
         jump: DROP
-      ignore_errors: yes
+      ignore_errors: true

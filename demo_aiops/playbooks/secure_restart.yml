@@ -1,0 +1,10 @@
+---
+- name: Restart high compliance server in the secure zone
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Set the hostname
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible for compliance server"
+        pre_reboot_delay: 5

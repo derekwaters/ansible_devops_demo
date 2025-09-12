@@ -1,7 +1,7 @@
 ---
 - name: Scale down EC2 instance to a smaller instance type by hostname
   hosts: all
-  gather_facts: no
+  gather_facts: false
   vars:
     new_instance_type: t2.micro
     region: us-east-1
@@ -17,12 +17,12 @@
       register: ec2_info
 
     - name: Find instance_id from hostname
-      set_fact:
+      ansible.builtin.set_fact:
         instance_id: "{{ ec2_info.instances | selectattr('private_dns_name', 'equalto', hostname) | map(attribute='instance_id') | list | first }}"
       when: ec2_info.instances is defined and ec2_info.instances | length > 0
 
     - name: Debug instance_id
-      debug:
+      ansible.builtin.debug:
         msg: "Instance ID is {{ instance_id }}"
       when: instance_id is defined
 
