@@ -113,6 +113,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "02_forensic_isolation"
     playbook: "{{ demo_name }}/playbooks/forensic_isolation.yml"
@@ -124,6 +126,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "03_renew_certificate"
     playbook: "{{ demo_name }}/playbooks/renew_certificate.yml"
@@ -135,6 +139,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "04_restart_application"
     playbook: "{{ demo_name }}/playbooks/restart_application.yml"
@@ -146,6 +152,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "05_scale_down_ec2"
     playbook: "{{ demo_name }}/playbooks/scale_down_ec2.yml"
@@ -157,6 +165,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "06_scale_up_ec2"
     playbook: "{{ demo_name }}/playbooks/scale_up_ec2.yml"
@@ -168,6 +178,8 @@ controller_templates:
       - "midrange-creds"
     project: "aiops-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
   - name: "secure_restart_server"
     playbook: "{{ demo_name }}/playbooks/secure_restart.yml"
@@ -177,5 +189,7 @@ controller_templates:
     inventory: "secure-vms"
     project: "secure-project"
     ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
     state: present
 ...
