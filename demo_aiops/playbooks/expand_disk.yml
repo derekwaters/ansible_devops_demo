@@ -6,26 +6,30 @@
     vg_name: 'store'
 
   tasks:
-    - name: Check the current size of the logical volume
-      community.general.lvol:
-        vg: "{{ vg_name }}"
-        lv: "{{ lvol_name }}"
-        size: +0M
-        check_mode: true
-      register: disk_status
-
-    - name: Print out the current volume size
+    - name: Demo simulating expanding the logical volume
       ansible.builtin.debug:
-        var: disk_status
+        msg: "Expanding the logical volume {{ lvol_name }} in volume group {{ vg_name }} by 512 MB"
 
-    - name: Extend the logical volume by 512 MB
-      community.general.lvol:
-        vg: "{{ vg_name }}"
-        lv: "{{ lvol_name }}"
-        size: +512M
-        resizefs: true
-      register: disk_status
+    # - name: Check the current size of the logical volume
+    #   community.general.lvol:
+    #     vg: "{{ vg_name }}"
+    #     lv: "{{ lvol_name }}"
+    #     size: +0M
+    #     check_mode: true
+    #   register: disk_status
 
-    - name: Print out the new volume size
-      ansible.builtin.debug:
-        var: disk_status
+    # - name: Print out the current volume size
+    #   ansible.builtin.debug:
+    #     var: disk_status
+
+    # - name: Extend the logical volume by 512 MB
+    #   community.general.lvol:
+    #     vg: "{{ vg_name }}"
+    #     lv: "{{ lvol_name }}"
+    #     size: +512M
+    #     resizefs: true
+    #   register: disk_status
+
+    # - name: Print out the new volume size
+    #   ansible.builtin.debug:
+    #     var: disk_status
