@@ -20,19 +20,6 @@ aap_user_accounts:
     email: "midrange@example.com"
     state: present
 
-controller_roles:
-  - user: "midrange_admin"
-    target_team: "Midrange Admins"
-    roles:
-      - "member"
-    state: present
-  - team: "Midrange Admins"
-    organization: "midrange"
-    roles:
-      - "execute"
-      - "read"
-    state: present
-
 controller_projects:
   - name: "aiops-project"
     description: "AIOps Playbooks"
@@ -191,5 +178,35 @@ controller_templates:
     ask_variables_on_launch: true
     ask_limit_on_launch: true
     ask_inventory_on_launch: true
+    state: present
+
+controller_roles:
+  - user: "midrange_admin"
+    target_team: "Midrange Admins"
+    roles:
+      - "member"
+    state: present
+  - team: "Midrange Admins"
+    organization: "midrange"
+    roles:
+      - "execute"
+      - "read"
+    state: present
+  - user: "midrange_admin"
+    inventory: "midrange-vms"
+    roles:
+      - "use"
+    state: present
+  - user: "midrange_admin"
+    job_templates:
+      - "01_expand_disk"
+      - "02_forensic_isolation"
+      - "03_renew_certificate"
+      - "04_restart_application"
+      - "05_scale_down_ec2"
+      - "06_scale_up_ec2"
+    roles:
+      - "execute"
+      - "read"
     state: present
 ...
