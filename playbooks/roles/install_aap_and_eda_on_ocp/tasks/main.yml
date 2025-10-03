@@ -8,7 +8,7 @@
       validate_certs: false
     aap_ocp_install_namespace: aap
     aap_ocp_install_operator:
-      channel: "stable-2.5-cluster-scoped"
+      channel: "stable-2.6-cluster-scoped"
     aap_ocp_install_platform:
       namespace: aap
       instance_name: demo-aap
@@ -18,8 +18,20 @@
       install: true
     aap_ocp_install_hub:
       install: false
-    
+
   block:
+    - name: Ensure ocp_host parameter is set
+      ansible.builtin.assert:
+        that:
+          - ocp_host | default('', true) | length > 0
+        fail_msg: "ocp_host parameter must be set"
+
+    - name: Ensure ocp_token parameter is set
+      ansible.builtin.assert:
+        that:
+          - ocp_token | default('', true) | length > 0
+        fail_msg: "ocp_token parameter must be set"
+
     - name: Install AAP and EDA
       ansible.builtin.include_role:
         name: "infra.aap_utilities.aap_ocp_install"
@@ -105,4 +117,3 @@
         eda_username: "admin"
         eda_password: "{{ eda_admin_pwd.resources[0].data.password | b64decode }}"
       when: not __aap_ocp_install_25_install
-
