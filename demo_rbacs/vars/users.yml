@@ -1,13 +1,13 @@
 ---
 aap_user_accounts:
-  - user: "debra"
+  - username: "debra"
     first_name: "Debra"
     last_name: "Developer"
     password: "Password1"
     organization: "user"
     state: present
 
-  - user: "paul"
+  - username: "paul"
     first_name: "Paul"
     last_name: "Platform"
     password: "Password1"

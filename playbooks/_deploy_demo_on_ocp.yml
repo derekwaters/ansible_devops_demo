@@ -18,6 +18,8 @@
         controller_host: "{{ controller_hostname }}"
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
+      register: __license_response
+      until: __license_response["failed"] == false
       retries: 10
       delay: 30
 
@@ -51,7 +53,7 @@
       ansible.builtin.include_role:
         name: "install_opa"
       when: opa_namespace is defined
-      
+
     - name: Load the other demo definition files
       ansible.builtin.include_vars:
         dir: "../{{ demo_name | default('demo_devops') }}/vars"
