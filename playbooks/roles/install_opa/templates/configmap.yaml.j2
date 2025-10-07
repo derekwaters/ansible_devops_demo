@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: example-policy
-  namespace: opa
+  namespace: {{ opa_namespace }}
 data:
   example.rego: |-
     package aap_tests
@@ -11,8 +11,6 @@ data:
       "allowed": true,
       "violations": [],
     }
-
-    violating_credentials := {cred.name | cred := input.credentials[_]; cred.organization == null}
 
     default has_change_or_incident := false
 
@@ -29,11 +27,4 @@ data:
       "violations": ["No change or incident number supplied"],
     } if {
       has_change_or_incident == false
-    }
-
-    allowed := {
-      "allowed": false,
-      "violations": ["Credential with no Organization"],
-    } if {
-      count(violating_credentials) > 0
     }

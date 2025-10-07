@@ -1,6 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
+  namespace: "{{ opa_namespace }}"
   name: opa
   labels:
     app: opa
