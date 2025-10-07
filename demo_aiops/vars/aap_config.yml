@@ -57,6 +57,8 @@ controller_inventories:
   - name: "midrange-vms"
     description: "Midrange Servers"
     organization: "midrange"
+    # TODO: Uncomment when this parameter is supported by the collections
+    # opa_query_path: "aap_tests/allowed"
     state: present
   - name: "secure-vms"
     description: "Secure Zone Servers"
@@ -79,6 +81,8 @@ controller_hosts:
   - name: "app-db-02"
     inventory: "midrange-vms"
     description: "Application Database Server 02"
+    variables:
+      ansible_connection: local
     enabled: true
   - name: "app-audit-01"
     inventory: "midrange-vms"
@@ -95,7 +99,6 @@ controller_templates:
     description: "Expand the available disk space on a server using lvm"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
@@ -108,7 +111,6 @@ controller_templates:
     description: "Isolate a server from the network for forensic analysis"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
@@ -121,7 +123,6 @@ controller_templates:
     description: "Renew an application web serving TLS certificate"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
@@ -134,7 +135,6 @@ controller_templates:
     description: "Restart a failed application service"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
@@ -147,7 +147,6 @@ controller_templates:
     description: "Scale down an AWS EC2 instance to a smaller size with reduced compute and memory resources"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
@@ -160,7 +159,6 @@ controller_templates:
     description: "Scale up an AWS EC2 instance to a larger size with increased compute and memory resources"
     job_type: "run"
     organization: "midrange"
-    inventory: "midrange-vms"
     credentials:
       - "midrange-creds"
     project: "aiops-project"
