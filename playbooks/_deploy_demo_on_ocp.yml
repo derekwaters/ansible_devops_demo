@@ -49,6 +49,11 @@
         name: "install_rhdh"
       when: rhdh_namespace is defined
 
+    - name: Load the OPA demo definition files
+      ansible.builtin.include_vars:
+        dir: "../{{ demo_name | default('demo_devops') }}/vars/"
+        files_matching: "opa_config.yml"
+
     - name: Install OPA if required
       ansible.builtin.include_role:
         name: "install_opa"

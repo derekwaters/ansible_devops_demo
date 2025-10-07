@@ -27,7 +27,7 @@
         api_key: "{{ __ocp_api_key }}"
         host: "{{ ocp_host }}"
         validate_certs: false
-        name: {{ opa_namespace }}
+        name: "{{ opa_namespace }}"
         api_version: v1
         kind: Namespace
         state: present
