@@ -59,19 +59,9 @@
         namespace: "{{ opa_namespace }}"
         resource_definition: "{{ lookup('ansible.builtin.template', 'service.yaml.j2') }}"
 
-    #- name: TODO: Wait for OPA to be available
-    #  kubernetes.core.k8s_info:
-    #    api_key: "{{ __ocp_api_key }}"
-    #    host: "{{ ocp_host }}"
-    #    validate_certs: false
-    #    kind: Subscription
-    #    namespace: rhdh-operator
-    #    name: 'rhdh'
-    #    api_version: 'operators.coreos.com/v1alpha1'
-    #  register: operatordetails
-    #  until: (operatordetails['resources'][0]['status']['state'] is defined) and (operatordetails['resources'][0]['status']['state'] == 'AtLatestKnown')
-    #  retries: 10
-    #  delay: 30
+    - name: Specify OPA setting for later configuration by the infra collections
+      ansible.builtin.set_fact:
+        controller_settings: "{{ controller_settings | default({}) | combine({'OPA_HOST': 'opa-service.' + opa_namespace + '.svc.cluster.local'}) }}"
 
   always:
     - name: If login succeeds, revoke the API key

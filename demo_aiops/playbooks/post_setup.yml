@@ -1,0 +1,14 @@
+- name: Generate an AAP API token for the midrange admin user for use in MCP
+  ansible.platform.token:
+    aap_hostname: "{{ controller_hostname }}"
+    aap_username: "midrange_admin"
+    aap_password: "abc123"
+    aap_validate_certs: false
+    scope: "write"
+    state: present
+    description: "MCP Server Access Token"
+  register: __aap_token_response
+
+- name: Set the AAP token fact for MCP deployment
+  ansible.builtin.set_fact:
+    aap_token_for_mcp: "{{ __aap_token_response.token }}"
