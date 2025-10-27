@@ -9,6 +9,78 @@
     description: "MCP Server Access Token"
   register: __aap_token_response
 
+- name: Debug AAP token response
+  ansible.builtin.debug:
+    var: __aap_token_response
+
 - name: Set the AAP token fact for MCP deployment
   ansible.builtin.set_fact:
-    aap_token_for_mcp: "{{ __aap_token_response.token }}"
+    aap_token_for_mcp: "{{ __aap_token_response.ansible_facts.aap_token.token }}"
+
+- name: Retrieve the aap project facts for MCP deployment
+  ansible.builtin.set_fact:
+    __project_data: "{{ lookup('ansible.controller.controller_api', 
+      'projects',
+      query_params= { 'name' : 'aiops-project' },
+      host = controller_hostname,
+      username = controller_username,
+      password = controller_password,
+      verify_ssl = False) }}"
+
+- name: Debug AAP project data
+  ansible.builtin.debug:
+    var: __project_data
+
+- name: Set the aap project id fact for MCP deployment
+  ansible.builtin.set_fact:
+    aap_project_id_for_mcp: "{{ __project_data.id }}"
+
+- name: Perform a set of OpenShift API calls
+  block:
+
+  - name: Log in to the OpenShift API
+    redhat.openshift.openshift_auth:
+      host: "{{ ocp_host }}"
+      username: "{{ ocp_username }}"
+      password: "{{ ocp_password }}"
+      validate_certs: false
+      state: present
+    register: openshift_auth_results
+    when: ocp_token is not defined
+
+  - name: Set the token
+    ansible.builtin.set_fact:
+      __ocp_api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    when: ocp_token is not defined
+    
+  - name: Set the token
+    ansible.builtin.set_fact:
+      __ocp_api_key: "{{ ocp_token }}"
+    when: ocp_token is defined
+
+  - name: Create MCP Resources
+    redhat.openshift.k8s:
+      api_key: "{{ __ocp_api_key }}"
+      host: "{{ ocp_host }}"
+      validate_certs: false
+      state: present
+      namespace: "{{ opa_namespace }}"
+      resource_definition: "{{ lookup('ansible.builtin.template', '../mcp_server/' + mcp_file_item +'.yaml.j2') }}"
+    loop:
+      - mcp_project
+      - mcp_configmap
+      - mcp_deployment
+      - mcp_service
+      - mcp_route
+    loop_control:
+      loop_var: mcp_file_item
+
+  always:
+    - name: If login succeeds, revoke the API key
+      when: openshift_auth_results.openshift_auth.api_key is defined
+      redhat.openshift.openshift_auth:
+        state: absent
+        api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+        host: "{{ ocp_host }}"
+        validate_certs: false
+      ignore_errors: true
