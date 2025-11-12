@@ -73,7 +73,7 @@
 
     - name: Check for post-setup playbook
       ansible.builtin.stat:
-        path: "../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
+        path: "{{ playbook_dir }}/../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
       register: __post_setup_file
 
     - name: Run a post-setup playbook if required for further config

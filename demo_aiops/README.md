@@ -37,6 +37,11 @@ https://catalog.demo.redhat.com/catalog?item=babylon-catalog-prod/sandboxes-gpte
 - infra.aap_configuration (available from Red Hat Cloud Console Automation Hub only)
 - ansible.eda
 - redhat.openshift
+- infra.aap_utilities
+
+and that you have installed:
+- pip
+- pip install kubernetes
 
 6) Deploy the OpenShift AI environment using the instructions here:
 
@@ -48,7 +53,7 @@ https://github.com/derekwaters/rhoai-roadshow-v2/tree/main/src/ansible
 8) Once your OpenShift Open Environment is provisioned, obtain the API URL and User Access Token
 9) Run the following command (substituting your relevant values):
 
-`ansible-playbook -i <inventory_file> -e ocp_host=https://<OpenShift API Hostname>:6443 -e ocp_username=kubeadmin -e ocp_token="<OpenShift Token>" -e aap_manifest_path="<Local Path to AAP Manifest ZIP File for Licensing AAP>" -e -e demo_name=demo_aiops ./playbooks/_deploy_demo_on_ocp.yml`
+`ansible-playbook -i <inventory_file> -e ocp_host=https://<OpenShift API Hostname>:6443 -e ocp_username=kubeadmin -e ocp_token="<OpenShift Token>" -e aap_manifest_path="<Local Path to AAP Manifest ZIP File for Licensing AAP>" -e demo_name=demo_aiops ./playbooks/_deploy_demo_on_ocp.yml`
 
 This will:
 
