@@ -1,0 +1,16 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: route-mcp-server-aap
+  namespace: mcp
+spec:
+  path: /
+  to:
+    kind: Service
+    name: mcp-server-aap
+    weight: 100
+  host: ''
+  port:
+    targetPort: http
+  alternateBackends: []
