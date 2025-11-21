@@ -1,0 +1,11 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mcp-server-aap
+  namespace: mcp
+data:
+  AAP_PROJECT_ID: '{{ aap_project_id_for_mcp }}'
+  AAP_TOKEN: '{{ aap_token_for_mcp }}'
+  AAP_URL: '{{ controller_hostname }}'
+  AAP_VERIFY_SSL: 'false'

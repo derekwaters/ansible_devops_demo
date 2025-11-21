@@ -28,7 +28,7 @@ controller_projects:
     scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
     scm_branch: main
     scm_clean: true
-    scm_update_on_launch: true
+    scm_update_on_launch: false
     update_project: true
     wait: true
     state: present
@@ -39,7 +39,7 @@ controller_projects:
     scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
     scm_branch: main
     scm_clean: true
-    scm_update_on_launch: true
+    scm_update_on_launch: false
     update_project: true
     wait: true
     state: present
