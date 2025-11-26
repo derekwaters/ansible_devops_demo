@@ -15,9 +15,8 @@
 
     - name: Check who I am assumed
       ansible.builtin.command: whoami
-      become: true
       become_user: oracle
-      become_method: ansible.builtin.sudo
+      become_method: su
       register: __result_whoami_oracle
       changed_when: false
 
