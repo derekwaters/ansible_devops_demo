@@ -18,7 +18,7 @@
       become_user: oracle
       become: true
       become_method: su
-      become_exe: su - oracle
+      # become_exe: su - oracle
       register: __result_whoami_oracle
       changed_when: false
 
