@@ -1,0 +1,26 @@
+---
+- name: "Check who I am"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check who I am initially
+      ansible.builtin.command:
+        whoami
+      register: __result_whoami
+      changed_when: false
+
+    - name: Output of whoami
+      ansible.builtin.debug:
+        msg: "User is {{ __result_whoami.stdout }}"
+
+    - name: Check who I am assumed
+      ansible.builtin.command: whoami
+      become_user: oracle
+      become: true
+      become_method: sudo
+      register: __result_whoami_oracle
+      changed_when: false
+
+    - name: Output of whoami assumed
+      ansible.builtin.debug:
+        msg: "User is {{ __result_whoami_oracle.stdout }}"
