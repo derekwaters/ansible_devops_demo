@@ -1,0 +1,169 @@
+---
+aap_organizations:
+  - name: certgen_platform
+    description: Platform Team for CertGen Demo
+    state: present
+      
+  - name: certgen_tenant
+    description: Tenant Team for CertGen Demo
+    state: present
+
+  - name: certgen_build
+    description: Build Team for CertGen Demo
+    state: present
+
+aap_teams:
+  - name: "certgen_build_team"
+    description: "Certgen Build Team"
+    organization: "certgen_build"
+    state: present
+    
+  - name: "certgen_platform_team"
+    description: "Certgen Platform Team"
+    organization: "certgen_platform"
+    state: present
+    
+aap_users:
+  - username: "terry"
+    first_name: "Terry"
+    last_name: "Tenant"
+    password: "Password1"
+    organization: "certgen_tenant"
+    state: present
+  - username: "bob"
+    first_name: "Bob"
+    last_name: "Build"
+    password: "Password1"
+    organization: "certgen_build"
+    state: present
+  - username: "paul"
+    first_name: "Paul"
+    last_name: "Platform"
+    password: "Password1"
+    organization: "certgen_platform"
+    state: present
+
+controller_projects:
+  - name: certgen_build
+    description: Build Team Project
+    organization: certgen_build
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+
+  - name: certgen_platform
+    description: Platform build project
+    organization: certgen_platform
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: true
+    update_project: true
+    wait: true
+    state: present
+
+
+
+controller_credentials:
+  - name: "certgen_cert_server_access"
+    description: "Certificate Generation System Credential"
+    organization: "certgen_build"
+    credential_type: Machine
+    inputs:
+      username: "admin"
+      password: "Password1"
+    state: present
+
+controller_templates:
+  - name: "certgen_generate_certs"
+    playbook: "demo_secure_certgen/playbooks/generate_certs.yml"
+    job_type: "run"
+    organization: "certgen_build"
+    inventory: "Demo Inventory"
+    project: "certgen_build"
+    credentials:
+      - "Demo Credential"
+    state: present
+
+  - name: "certgen_platform_deploy"
+    playbook: "demo_secure_certgen/playbooks/install_certs_on_dev_server.yml"
+    job_type: "run"
+    organization: "certgen_platform"
+    inventory: "Demo Inventory"
+    project: "certgen_platform"
+    credentials:
+      - "Demo Credential"
+    state: present
+
+controller_workflows:
+  - name: "certgen_build_devserver"
+    description: "Build Development Server"
+    organization: "certgen_build"
+    inventory: "Demo Inventory"
+    state: present
+    ask_variables_on_launch: true
+    simplified_workflow_nodes:
+      - identifier: build_certs
+        unified_job_template: "certgen_generate_certs"
+        success_nodes:
+          - "deploy_certs"
+        failure_nodes: []
+        always_nodes: []
+        credentials: []
+
+      - identifier: deploy_certs
+        unified_job_template: "certgen_platform_deploy"
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+        credentials: []
+
+controller_roles:
+  - team: "certgen_build_team"
+    role: "member"
+    organization: "certgen_build"
+    state: present
+  - team: "certgen_platform_team"
+    role: "member"
+    organization: "certgen_platform"
+    state: present
+  - team: "certgen_tenant_team"
+    role: "member"
+    organization: "certgen_tenant"
+    state: present
+
+  - user: "terry"
+    role: "member"
+    target_team: "certgen_tenant_team"
+    state: present
+  - user: "bob"
+    role: "member"
+    target_team: "certgen_build_team"
+    state: present
+  - user: "paul"
+    role: "member"
+    target_team: "certgen_platform_team"
+    state: present
+
+  - team: "certgen_build_team"
+    roles:
+      - use
+      - read
+    credential: "certgen_cert_server_access"
+    lookup_organization: "certgen_tenant"
+    state: present
+
+  - team: "certgen_platform_team"
+    roles:
+      - execute
+      - read
+    job_template: "certgen_generate_certs"
+    lookup_organization: "certgen_build"
+    state: present
+...

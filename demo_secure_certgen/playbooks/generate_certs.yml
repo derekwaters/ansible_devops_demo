@@ -1,0 +1,13 @@
+---
+- name: Generate a set of certificates
+  hosts: all
+  connection: local
+  collections:
+    - venafi.machine_identity
+  vars:
+
+  tasks:
+    - name: Generate a new certificate
+      ansible.builtin.include_role:
+        name: venafi.machine_identity.certificate
+      

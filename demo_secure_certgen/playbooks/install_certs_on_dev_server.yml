@@ -1,0 +1,9 @@
+---
+- name: Install Certs on dev server
+  hosts: all
+  
+  tasks:
+    - name: Copy em
+      ansible.builtin.file:
+        src: my_local.crt
+        dest: /etc/certs/my_local.crt
