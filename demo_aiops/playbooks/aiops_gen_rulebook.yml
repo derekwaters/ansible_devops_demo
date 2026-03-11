@@ -1,0 +1,88 @@
+---
+- name: Generate rulebook changes for a successful event-handling solution
+  hosts: all
+  
+  tasks:
+  vars:
+    ai_endpoint: https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1
+    ai_token: sk-HsF3Ue5dKDE-2j6lN_OJ8g
+    ai_model_name: Mistral-Small-24B-W8A8
+    aiops_git_repo: https://github.com/derekwaters/ansible_devops_demo
+    aiops_rulebook: "rulebooks/aiops_events.yaml"
+    github_token: abc123
+    working_dir: /tmp/git_working
+
+  tasks:
+    - name: Determine a branch name
+      ansible.builtin.set_fact:
+        __merge_branch: "aiops_rulebook_change_{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
+
+    - name: Retrieve the rulebook repo
+      ansible.scm.git_retrieve:
+        branch:
+          name: "{{ __merge_branch }}"
+        origin:
+          url: "{{ aiops_git_repo }}"
+          token: "{{ github_token }}"
+        upstream:
+          url: "{{ aiops_git_repo }}"
+        parent_directory: "{{ working_dir }}"
+      register: __git_receive_output
+
+    - name: Set the repository dir variable
+      ansible.builtin.set_fact:
+        __repo_dir: "{{ __git_receive_output.path }}"
+
+    - name: Set rulebook path variable
+      ansible.builtin.set_fact:
+        __rulebook_path: "{{ __repo_dir }}/{{ aiops_rulebook }}"
+
+    - name: Load the rulebook under test
+      ansible.builtin.set_fact:
+        __ansible_rulebook : "{{ lookup('file', __rulebook_path) }}"
+
+    - name: Build the AI prompt
+      ansible.builtin.set_fact:
+        __codegen_prompt: |
+          Update the following ansible EDA rulebook:
+          ----------------
+          {{ __ansible_rulebook }}
+          ----------------
+          Add a new event handler to detect the following incoming event:
+          {{ agent_output.source_event }}
+          and launch the following job template:
+          {{ agent_output.job_template_name }}
+          belonging to the following organization:
+          {{ agent_output.organization_name }}
+          Ensure that the result is returned as a YAML Ansible EDA rulebook code file.
+
+    - name: Send the query request
+      ansible.builtin.include_role:
+        name: call_ai_model
+      vars:
+        call_ai_model_vars:
+          endpoint: "{{ ai_endpoint }}"
+          token: "{{ ai_token }}"
+          model_name: "{{ ai_model_name }}"
+          prompt: "{{ __codegen_prompt }}"
+
+    - name: Write the response to the code file
+      ansible.builtin.copy:
+        content: "{{ call_ai_model_result }}"
+        dest: "{{ __rulebook_path }}"
+
+    - name: Publish the ansible-signing files back to the repo
+      ansible.scm.git_publish:
+        commit:
+          message: "AIOps Agent: Generated new rulebook definition based on successful error remediation"
+        path: "{{ __repo_dir }}"
+        token: "{{ github_token }}"
+        user:
+          name: "AAP AIOps Agent"
+          email: "aiops@localhost"
+
+
+
+
+
+

@@ -12,3 +12,12 @@
     - name: Run deployment
       ansible.builtin.include_role:
         name: "deploy_demo"
+
+    - name: Check for post-setup playbook
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
+      register: __post_setup_file
+
+    - name: Run a post-setup playbook if required for further config
+      ansible.builtin.include_tasks: "../{{ demo_name | default('demo_devops') }}/playbooks/post_setup.yml"
+      when: __post_setup_file.stat.exists

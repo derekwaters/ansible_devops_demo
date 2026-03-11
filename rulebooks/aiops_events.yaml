@@ -1,0 +1,48 @@
+---
+- name: Listen for events from the observability "lake"
+  hosts: all
+  sources:
+    - name: Listen to default webhook messages on port 5001
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5001
+  rules:
+    # Handle any known environmental events
+
+    - name: Known Event - high CPU
+      condition: >
+        event.payload.type == "error" and
+        event.payload.message is search("cpu high", true)
+      action:
+        run_job_template:
+          organization: "midrange"
+          name: "06_scale_up_ec2"
+          job_args:
+            limit: "{{ event.payload.host }}"
+            
+
+    - name: Known Event - intrusion
+      condition: >
+        event.payload.type == "error" and
+        event.payload.message is search("intrusion", true)
+      action:
+        run_job_template:
+          organization: "midrange"
+          name: "02_forensic_isolation"
+          job_args:
+            limit: "{{ event.payload.host }}"
+
+    # Any additional AIOps events should be added here
+
+
+
+    # Default fallthrough case - use AI to try and solve the issue
+    - name: Default action - AIOps workflow
+      condition: >
+        event.payload.type == "error"
+      action:
+        run_workflow_template:
+          organization: "aiops"
+          name: "aiops_workflow"
+          job_args:
+            limit: "{{ event.payload.host }}"

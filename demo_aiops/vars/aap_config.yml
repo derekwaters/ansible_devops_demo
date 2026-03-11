@@ -6,6 +6,9 @@ aap_organizations:
   - name: "secure"
     description: "Secure Zone"
     state: present
+  - name: "aiops"
+    description: "AIOps Agent Team"
+    state: present
 
 aap_teams:
   - name: "Midrange Admins"
@@ -43,6 +46,18 @@ controller_projects:
     update_project: true
     wait: true
     state: present
+  - name: "aiops-agent-project"
+    description: "AIOps Agent Playbooks"
+    organization: "aiops"
+    scm_type: git
+    scm_url: "https://github.com/derekwaters/ansible_devops_demo.git"
+    scm_branch: main
+    scm_clean: true
+    scm_update_on_launch: false
+    update_project: true
+    wait: true
+    state: present
+
 
 controller_credentials:
   - name: "midrange-creds"
@@ -178,6 +193,75 @@ controller_templates:
     ask_inventory_on_launch: true
     state: present
 
+
+  # AIOps Agent Workflow nodes
+  - name: "aiops_agent"
+    playbook: "{{ demo_name }}/playbooks/aiops_agent.yml"
+    description: "Use an AI agent to attempt to solve an event with AAP"
+    job_type: "run"
+    organization: "aiops"
+    project: "aiops-agent-project"
+    ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
+    state: present
+  - name: "aiops_gen_playbook"
+    playbook: "{{ demo_name }}/playbooks/aiops_gen_playbook.yml"
+    description: "Use an AI agent to generate a new playbook and an amended rulebook to handle unknown error events"
+    job_type: "run"
+    organization: "aiops"
+    project: "aiops-agent-project"
+    ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
+    state: present
+  - name: "aiops_gen_rulebook"
+    playbook: "{{ demo_name }}/playbooks/aiops_gen_rulebook.yml"
+    description: "Use an AI agent to generate an amended rulebook to handle known error events"
+    job_type: "run"
+    organization: "aiops"
+    project: "aiops-agent-project"
+    ask_variables_on_launch: true
+    ask_limit_on_launch: true
+    ask_inventory_on_launch: true
+    state: present
+
+controller_workflows:
+  - name: "aiops_workflow"
+    description: "Use an AI Agent to solve event issues"
+    organization: "aiops"
+    inventory: "Demo Inventory"
+    state: present
+    extra_vars:
+      remote_repo: "tbd"
+      remote_branch: "dev"
+      destination_email: "pipelines@company.com.au"
+      source_email: "aap_build_bot@company.com.au"
+    ask_variables_on_launch: true
+    simplified_workflow_nodes:
+      - identifier: aiops_agent
+        unified_job_template: "aiops_agent"
+        success_nodes:
+          - "aiops_gen_rulebook"
+        failure_nodes:
+          - "aiops_gen_playbook"
+        always_nodes: []
+        credentials: []
+
+      - identifier: aiops_gen_rulebook
+        unified_job_template: "aiops_gen_rulebook"
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+        credentials: []
+
+      - identifier: aiops_gen_playbook
+        unified_job_template: "aiops_gen_playbook"
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+        credentials: []
+
 controller_roles:
   - user: "midrange_admin"
     target_team: "Midrange Admins"
@@ -203,6 +287,9 @@ controller_roles:
       - "04_restart_application"
       - "05_scale_down_ec2"
       - "06_scale_up_ec2"
+      - "aiops_agent"
+      - "aiops_gen_playbook"
+      - "aiops_gen_rulebook"
     roles:
       - "execute"
       - "read"

@@ -1,0 +1,32 @@
+---
+- name: Handle unknown observability lake events with AIOps
+  hosts: all
+  vars:
+  
+  tasks:
+    - name: Call the AI Agent
+      ansible.builtin.uri:
+        some_stuff_here
+
+      register: __agent_output
+
+    - name: Parse the AI Agent Output
+      ansible.builtin.set_fact:
+        __agent_output_details: "{{ __agent_output | from_json }}"
+
+    - name: Generate details for next workflow job
+      ansible.builtin.set_fact:
+        agent_output:
+          source_event: "{{ ansible_eda.event }}"
+          job_template: "{{ __agent_output_details.job_template_name }}"
+          organization: "{{ __agent_output_details.organization_name }}"
+
+    # In this case, the AI Agent failed to solve the problem, so we'll
+    # generate a new playbook to handle this event automatically in future.
+    - name: Check whether the agent launched a job successfully
+      ansible.builtin.fail:
+        msg: AIOps Agent could not solve the event with a known job template
+      when: __agent_output_details.success == false
+
+    # In this case, the AI Agent solved the problem, so we'll generate
+    # an update to the rulebook to handle this event automatically in future.

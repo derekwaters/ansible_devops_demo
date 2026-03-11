@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: "dwaters@redhat.com"
+  description: "Call an OpenAI-compatible LLM inferencing engine with an arbitrary prompt"
+  company: "Red Hat"
+
+  # If the issue tracker for your role is not on github, uncomment the
+  # next line and provide a value
+  # issue_tracker_url: http://example.com/issue/tracker
+
+  license: "license (BSD-3-Clause)"
+
+  min_ansible_version: "2.1"
+
+  dependencies: []
+
+  galaxy_tags:
+    - AI
+    - OpenAI
+    - LLM
+    - aiops
+    - demo

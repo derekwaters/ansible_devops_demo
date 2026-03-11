@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - call_ai_model
+  vars:
+    call_ai_model_vars:
+      endpoint: https://llm.hosting.endpoint.com/v1
+      token: TOKEN_VALUE
+      model_name: Mistral-Small-24B-W8A8
+      prompt: What is the capital of Australia?

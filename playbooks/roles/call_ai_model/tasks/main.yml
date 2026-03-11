@@ -1,0 +1,41 @@
+---
+- name: Call an OpenAI-compatible LLM endpoint with a given prompt
+  block:
+    - name: Verify that required input vars are set
+      ansible.builtin.assert:
+        that:
+          - call_ai_model_vars is defined
+          - call_ai_model_vars.endpoint is defined
+          - call_ai_model_vars.token is defined
+          - call_ai_model_vars.model_name is defined
+          - call_ai_model_vars.prompt is defined
+        fail_msg: "call_ai_model role needs call_ai_model_vars defined as per <roles>/call_ai_model/vars/main.yml"
+    
+    - name: Built the response uri
+      ansible.builtin.set_fact:
+        __responses_uri: "{{ call_ai_model_vars.endpoint }}/chat/completions"
+
+    - name: Send the query request
+      ansible.builtin.uri:
+        url: "{{ __responses_uri }}"
+        return_content: true
+        method: POST
+        headers:
+          accept: "application/json"
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ call_ai_model_vars.token }}"
+        body_format: json
+        body:
+          model: "{{ call_ai_model_vars.model_name }}"
+          messages:
+            - content: "{{ call_ai_model_vars.prompt }}"
+              role: "user"
+      register: __responses_result
+
+    - name: Debug the response
+      ansible.builtin.debug:
+        var: __responses_result
+
+    - name: Write the response to the output variable
+      ansible.builtin.set_fact:
+        call_ai_model_result: "{{ __responses_result.json.choices[0].message }}"
