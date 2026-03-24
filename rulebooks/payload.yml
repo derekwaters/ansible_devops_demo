@@ -1,0 +1,15 @@
+---
+- name: Payload Listener Rulebook
+  hosts: all
+
+  sources:
+    - pg_event_source:
+      ansible.eda.generic:
+        payload: "{{ event_data }}"
+
+  rules:
+    - name: echo payload
+      condition: event.payload is defined
+      action:
+        debug:
+          msg: "payload received: {{ event.payload }}"
