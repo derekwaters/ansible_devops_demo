@@ -3,7 +3,7 @@
   hosts: all
 
   sources:
-    - pg_event_source:
+    - name: pg_event_source
       ansible.eda.generic:
         payload: "{{ event_data }}"
 

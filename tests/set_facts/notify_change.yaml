@@ -1,0 +1,17 @@
+---
+- name: Notify Change Details
+  hosts: all
+
+  tasks:
+    - name: Notify Change Details (status)
+      ansible.builtin.debug:
+        var: status
+    - name: Notify Change Details (change_number)
+      ansible.builtin.debug:
+        var: change_number
+    - name: Notify Change Details (failure_reason)
+      ansible.builtin.debug:
+        var: failure_reason
+    - name: Notify all details;
+      ansible.builtin.debug: 
+        var: ansible_facts

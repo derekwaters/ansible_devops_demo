@@ -1,0 +1,9 @@
+---
+- name: Raise a Change
+  hosts: all
+
+  tasks:
+    - name: Ensure the Change is Raised
+      ansible.builtin.set_fact:
+        status: "Change Raised"
+        change_number: "CHG-001"

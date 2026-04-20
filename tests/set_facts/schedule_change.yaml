@@ -1,0 +1,13 @@
+---
+- name: Schedule a Change
+  hosts: all
+
+  tasks:
+    - name: Ensure the Change is Scheduled
+      ansible.builtin.set_fact:
+        status: "Change Could Not Be Scheduled"
+        failure_reason: "Wrong Month"
+    
+    - name: Ensure the scheduling fails
+      ansible.builtin.fail:
+        msg: "It failed"
