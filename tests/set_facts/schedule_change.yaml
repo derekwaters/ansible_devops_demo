@@ -3,8 +3,12 @@
   hosts: all
 
   tasks:
+    - name: Print a pretty little message
+      ansible.builtin.debug:
+        msg: "Trying to schedule change {{ change_number }}"
+        
     - name: Ensure the Change is Scheduled
-      ansible.builtin.set_fact:
+      ansible.builtin.set_stats:
         status: "Change Could Not Be Scheduled"
         failure_reason: "Wrong Month"
     

@@ -4,6 +4,6 @@
 
   tasks:
     - name: Ensure the Change is Raised
-      ansible.builtin.set_fact:
+      ansible.builtin.set_stats:
         status: "Change Raised"
         change_number: "CHG-001"
