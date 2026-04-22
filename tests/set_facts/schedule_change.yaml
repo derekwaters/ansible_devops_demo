@@ -10,6 +10,10 @@
     - name: Ensure the Change is Scheduled
       ansible.builtin.set_stats:
         data:
+          status_dict:
+            raise_change: "Complete"
+            schedule_change: "Complete"
+            close_change: ""
           status: "Change Could Not Be Scheduled"
           failure_reason: "Wrong Month"
     

@@ -7,4 +7,8 @@
       ansible.builtin.set_stats:
         data:
           status: "Change Raised"
+          status_dict:
+            raise_change: "Complete"
+            schedule_change: ""
+            close_change: ""
           change_number: "CHG-001"
