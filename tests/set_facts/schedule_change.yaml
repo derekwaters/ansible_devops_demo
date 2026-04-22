@@ -11,9 +11,10 @@
       ansible.builtin.set_stats:
         data:
           status_dict:
-            raise_change: "Complete"
+            raise_change: "{{ status_dict.raise_change }}"
             schedule_change: "Complete"
-            close_change: ""
+          status_dict_2:
+            schedule_change: "Complete"
           status: "Change Could Not Be Scheduled"
           failure_reason: "Wrong Month"
     

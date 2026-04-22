@@ -9,6 +9,8 @@
           status: "Change Raised"
           status_dict:
             raise_change: "Complete"
-            schedule_change: ""
-            close_change: ""
+            schedule_change: None
+            close_change: None
+          status_dict_2:
+            raise_change: "Complete"
           change_number: "CHG-001"

@@ -6,6 +6,12 @@
     - name: Notify Change Details (status)
       ansible.builtin.debug:
         var: status
+    - name: Notify Change Details (status_dict)
+      ansible.builtin.debug:
+        var: status_dict
+    - name: Notify Change Details (status_dict2)
+      ansible.builtin.debug:
+        var: status_dict2
     - name: Notify Change Details (change_number)
       ansible.builtin.debug:
         var: change_number
