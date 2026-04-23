@@ -24,7 +24,7 @@
 
     - name: Recreate the status array
       ansible.builtin.set_fact:
-        status_array: "{{ (status_array | default({})) | combine({ item[11:] : (vars[item] | default()) }) }}"
+        status_array: "{{ (status_array | default({})) | combine({ item[7:] : (vars[item] | default()) }) }}"
       loop:
         - "status_001_raise"
         - "status_002_schedule"
