@@ -16,6 +16,7 @@
           status_dict_2:
             schedule_change: "Complete"
           status: "Change Could Not Be Scheduled"
+          status_002_schedule: "Change Could Not Be Scheduled"
           failure_reason: "Wrong Month"
     
     - name: Ensure the scheduling fails

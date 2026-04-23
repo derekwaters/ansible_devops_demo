@@ -21,3 +21,15 @@
     - name: Notify all details;
       ansible.builtin.debug: 
         var: ansible_facts
+
+    - name: Recreate the status array
+      ansible.builtin.set_fact:
+        status_array: "{{ (status_array | default({})) | combine({ item[11:] : (vars[item] | default()) }) }}"
+      loop:
+        - "status_001_raise"
+        - "status_002_schedule"
+        - "status_003_close"
+
+    - name: Notify status array
+      ansible.builtin.debug: 
+        var: status_array
