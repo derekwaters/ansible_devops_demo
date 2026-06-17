@@ -1,0 +1,20 @@
+---
+- name: Handle Red Hat Errata
+  hosts: all
+  gather_facts: false
+  vars:
+    _temp_path: "/tmp/"
+
+  tasks:
+    - name: Build the filename
+      ansible.builtin.set_fact:
+        _file_path: "{{ _temp_path}}errata_{{ now() | strftime('%Y%m%d-%H%M%S') }}"
+
+    - name: Extract the event data
+      ansible.builtin.set_fact:
+        _event_data: "{{ ansible_eda.event.data }}"
+
+    - name: Write the event data to a temp file
+      ansible.builtin.copy:
+        content: "{{ _event_data | to_json }}\n"
+        dest: "{{ _file_path }}"

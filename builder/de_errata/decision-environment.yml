@@ -1,0 +1,39 @@
+# Make sure you podman login to the Red Hat registry, then:
+# ansible-builder build -t de_errata:latest
+# To host locally:
+# * run the docker registry:
+#     podman run -d -p 5000:5000 --name registry registry:latest
+# * Add the docker registry as an insecure registry:
+#     vi /etc/containers/registries.conf.d/099-localhost-registry.conf
+#     
+#       [[registry]]
+#       location = "localhost:5000"
+#       insecure = true
+#
+# * Tag the built image:
+#     podman image tag localhost/de_errata localhost:5000/de_errata
+# * Push the image:
+#     podman push localhost:5000/de_errata
+# * Verify the image is there:
+#     curl -X GET http://localhost:5000/v2/_catalog
+
+version: 3
+
+images:
+  base_image:
+    name: "registry.redhat.io/ansible-automation-platform-27/de-minimal-rhel9:latest"
+
+dependencies:
+  system:
+    - pkgconf-pkg-config [platform:rpm]
+    - systemd-devel [platform:rpm]
+    - gcc [platform:rpm]
+    - python3.12-devel [platform:rpm] 
+  galaxy:
+    collections:
+      - derekwaters.rh_errata
+  python_interpreter:
+    package_system: "python3"
+
+options:
+  package_manager_path: /usr/bin/microdnf

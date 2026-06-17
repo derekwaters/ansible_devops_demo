@@ -1,0 +1,27 @@
+---
+eda_projects:
+  - name: errata-demo
+    organization: errata-demo
+    description: Errata EDA Demo
+    url: https://github.com/derekwaters/ansible_devops_demo
+eda_decision_environments:
+  - name: errata-de
+    organization: errata-demo
+    description: Errata EDA Demo
+    image_url: "quay.io/rh-ee-dwaters/errata-de"
+eda_rulebook_activations:
+  - name: errata-activation
+    organization: errata-demo
+    description: Errata EDA Demo
+    project: errata-demo
+    rulebook: errata.yml
+    decision_environment: errata-de
+    awx_token: "aap_token"
+    restart_policy: always
+    is_enabled: True
+    state: present
+eda_user_tokens:
+  - name: aap_token
+    organization: errata-demo
+    description: Default AAP Access Token
+    token: "{{ awx_token }}"
