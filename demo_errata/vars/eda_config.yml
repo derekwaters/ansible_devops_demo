@@ -8,7 +8,7 @@ eda_decision_environments:
   - name: errata-de
     organization: errata-demo
     description: Errata EDA Demo
-    image_url: "quay.io/rh-ee-dwaters/errata-de"
+    image_url: "quay.io/rh-ee-dwaters/de_errata"
 eda_rulebook_activations:
   - name: errata-activation
     organization: errata-demo
