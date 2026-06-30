@@ -1,0 +1,136 @@
+---
+aap_organizations:
+  - name: "AAP_Training"
+    description: "Org for Training Exercises"
+    state: present
+
+
+aap_teams:
+  - name: "Students"
+    description: "Exercise Students Team"
+    organization: "AAP_Training"
+    state: present
+
+aap_user_accounts:
+  - username: "test"
+    first_name: "Test"
+    last_name: "Workshop"
+    password: "Password1"
+    organization: "AAP_Training"
+    state: present
+
+
+controller_inventories:
+  - name: "Exercise"
+    description: "Exercise Servers"
+    organization: "AAP_Training"
+    state: present
+
+controller_hosts:
+  - name: "localhost"
+    inventory: "Exercise"
+    description: "Localhost for testing"
+    enabled: true
+  - name: "win-app01-db"
+    inventory: "Exercise"
+    description: "Windows App01 Database Server"
+    enabled: true
+  - name: "win-app01-web"
+    inventory: "Exercise"
+    description: "Windows App01 Web Server"
+    enabled: true
+  - name: "rhel-app02-web-01"
+    inventory: "Exercise"
+    description: "RHEL App02 Web Server 1"
+    enabled: true
+  - name: "rhel-app02-web-02"
+    inventory: "Exercise"
+    description: "RHEL App02 Web Server 2"
+    enabled: true
+  - name: "rhel-app02-db"
+    inventory: "Exercise"
+    description: "RHEL App02 Database Server"
+    enabled: true
+
+controller_credentials:
+  - name: "Exercise"
+    description: "Exercise Server Credentials"
+    organization: "AAP_Training"
+    credential_type: "Machine"
+    inputs:
+      username: "aap"
+      password: "invalid_password"
+
+
+# controller_role_definitions:
+#   - name: Manage Workflow Templates
+#     description: Grants modification permissions on workflow job Templates
+#     content_type: awx.workflowjobtemplate
+#     permissions:
+#       - awx.approve_workflowjobtemplate
+#       - awx.change_workflowjobtemplate
+#       - awx.delete_workflowjobtemplate
+#       - awx.execute_workflowjobtemplate
+#       - awx.view_workflowjobtemplate
+
+#   - name: Manage Job Templates
+#     description: Grants modification permissions on job Templates
+#     content_type: awx.jobtemplate
+#     permissions:
+#       - awx.change_jobtemplate
+#       - awx.delete_jobtemplate
+#       - awx.execute_jobtemplate
+#       - awx.view_jobtemplate
+
+
+
+# This team will need the following RBACs:
+# -> Read and Use Inventory 'Exercise'
+# -> Read any other sample Inventories
+# -> Read and Use Credential 'Exercise'
+# -> Read and Use a Source Code Credential for access to Github Enterprise
+# -> Read any other sample Credentials
+# -> Read and Use Execution Environments
+# -> Read, Execute and Create Job Templates
+# -> Read, Execute and Create Workflow Job Templates
+
+
+
+# controller_roles:
+#   - team: "Students"
+#     organization: "AAP_Training"
+#     roles:
+#       - "member"
+#     state: present
+
+#   - team: 
+
+#   - user: "midrange_admin"
+#     target_team: "Midrange Admins"
+#     roles:
+#       - "member"
+#     state: present
+#   - team: "Midrange Admins"
+#     organization: "midrange"
+#     roles:
+#       - "execute"
+#       - "read"
+#     state: present
+#   - user: "midrange_admin"
+#     inventory: "midrange-vms"
+#     roles:
+#       - "use"
+#     state: present
+#   - user: "midrange_admin"
+#     job_templates:
+#       - "01_expand_disk"
+#       - "02_forensic_isolation"
+#       - "03_renew_certificate"
+#       - "04_restart_application"
+#       - "05_scale_down_ec2"
+#       - "06_scale_up_ec2"
+#     roles:
+#       - "execute"
+#       - "read"
+#     state: present
+...
