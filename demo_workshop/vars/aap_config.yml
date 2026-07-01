@@ -61,6 +61,21 @@ controller_credentials:
       username: "aap"
       password: "invalid_password"
 
+controller_roles:
+  - team: "Students"
+    roles:
+      - read
+      - use
+    credential: "Exercise"
+    lookup_organization: "AAP_Training"
+    state: present
+  - team: "Students"
+    roles: 
+      - read
+      - use
+    inventory: "Exercise"
+    lookup_organization: "AAP_Training"
+    state: present
 
 # controller_role_definitions:
 #   - name: Manage Workflow Templates
