@@ -3,6 +3,9 @@ aap_organizations:
   - name: "AAP_Training"
     description: "Org for Training Exercises"
     state: present
+  - name: "AAP_Training_Admin"
+    description: "Org for Training Exercises Administration"
+    state: present
 
 
 aap_teams:
@@ -23,7 +26,7 @@ aap_user_accounts:
 controller_inventories:
   - name: "Exercise"
     description: "Exercise Servers"
-    organization: "AAP_Training"
+    organization: "AAP_Training_Admin"
     state: present
 
 controller_hosts:
@@ -55,11 +58,17 @@ controller_hosts:
 controller_credentials:
   - name: "Exercise"
     description: "Exercise Server Credentials"
-    organization: "AAP_Training"
+    organization: "AAP_Training_Admin"
     credential_type: "Machine"
     inputs:
       username: "aap"
       password: "invalid_password"
+
+gateway_role_user_assignments:
+  - role_definition: "Team Member"
+    object_ids: 
+      - "Students"
+    user: "test"
 
 controller_roles:
   - team: "Students"
@@ -67,85 +76,23 @@ controller_roles:
       - read
       - use
     credential: "Exercise"
-    lookup_organization: "AAP_Training"
+    lookup_organization: "AAP_Training_Admin"
     state: present
   - team: "Students"
     roles: 
       - read
       - use
     inventory: "Exercise"
-    lookup_organization: "AAP_Training"
+    lookup_organization: "AAP_Training_Admin"
     state: present
 
-# controller_role_definitions:
-#   - name: Manage Workflow Templates
-#     description: Grants modification permissions on workflow job Templates
-#     content_type: awx.workflowjobtemplate
-#     permissions:
-#       - awx.approve_workflowjobtemplate
-#       - awx.change_workflowjobtemplate
-#       - awx.delete_workflowjobtemplate
-#       - awx.execute_workflowjobtemplate
-#       - awx.view_workflowjobtemplate
-
-#   - name: Manage Job Templates
-#     description: Grants modification permissions on job Templates
-#     content_type: awx.jobtemplate
-#     permissions:
-#       - awx.change_jobtemplate
-#       - awx.delete_jobtemplate
-#       - awx.execute_jobtemplate
-#       - awx.view_jobtemplate
-
-
-
-# This team will need the following RBACs:
-# -> Read and Use Inventory 'Exercise'
-# -> Read any other sample Inventories
-# -> Read and Use Credential 'Exercise'
-# -> Read and Use a Source Code Credential for access to Github Enterprise
-# -> Read any other sample Credentials
-# -> Read and Use Execution Environments
-# -> Read, Execute and Create Job Templates
-# -> Read, Execute and Create Workflow Job Templates
-
-
-
-# controller_roles:
-#   - team: "Students"
-#     organization: "AAP_Training"
-#     roles:
-#       - "member"
-#     state: present
-
-#   - team: 
-
-#   - user: "midrange_admin"
-#     target_team: "Midrange Admins"
-#     roles:
-#       - "member"
-#     state: present
-#   - team: "Midrange Admins"
-#     organization: "midrange"
-#     roles:
-#       - "execute"
-#       - "read"
-#     state: present
-#   - user: "midrange_admin"
-#     inventory: "midrange-vms"
-#     roles:
-#       - "use"
-#     state: present
-#   - user: "midrange_admin"
-#     job_templates:
-#       - "01_expand_disk"
-#       - "02_forensic_isolation"
-#       - "03_renew_certificate"
-#       - "04_restart_application"
-#       - "05_scale_down_ec2"
-#       - "06_scale_up_ec2"
-#     roles:
-#       - "execute"
-#       - "read"
-#     state: present
+  - team: "Students"
+    organizations:
+      - "AAP_Training"
+    roles: 
+      - execute
+      - job_template_admin
+      - project_admin
+      - inventory_admin
+      - workflow_admin
 ...
