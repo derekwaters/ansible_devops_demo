@@ -1,0 +1,6 @@
+---
+# OCP Connection Information
+smtp_host: mail.server
+smtp_username: admin
+smtp_password: password
+smtp_port: 25

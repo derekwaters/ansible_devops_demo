@@ -1,0 +1,37 @@
+---
+- name: Display a list of facts associated with the host
+  hosts: all
+  tags:
+    - facts
+  tasks:
+    - name: Show all of the information Ansible has collected
+      ansible.builtin.debug:
+        var: ansible_facts
+
+- name: Send an email to a user
+  hosts: all
+  tags:
+    - email
+  tasks:
+    - name: Send an email to a defined user
+      ansible.builtin.include_role:
+        name: "send_email"
+      vars:
+        subject: Hello from the Ansible Workshop!
+        to: "{{ account_name }} <{{ email_address }}>"
+        body: This is a sample email from an Ansible playbook
+        from: "{{ account_name }} <{{ email_address }}>"
+
+- name: Send a chat message to a user
+  hosts: all
+  tags:
+    - asciibot
+  tasks:
+    - name: Get a greeting from the asciibot
+      derekwaters.asciibot.hello:
+        account_name: "{{ account_name }}"
+      register: _message
+
+    - name: Write out the greeting
+      ansible.builtin.debug:
+        var: _message

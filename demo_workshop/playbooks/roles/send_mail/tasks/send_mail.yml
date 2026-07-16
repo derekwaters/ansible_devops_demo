@@ -1,0 +1,4 @@
+---
+- name: Send the email
+  community.general.mail:
+    todo

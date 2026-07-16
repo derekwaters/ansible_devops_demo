@@ -1,0 +1,23 @@
+namespace: derekwaters
+name: asciibot
+version: 1.0.0
+readme: README.md
+authors:
+- Derek Waters <derek@frisbeeworld.com>
+
+description: A bot that only talks in ascii art
+license:
+- GPL-2.0-or-later
+tags: 
+  - bots
+  - ascii
+  - art
+
+dependencies: {}
+repository: https://github.com/derekwaters/ansible_devops_demo/
+documentation: https://github.com/derekwaters/ansible_devops_demo/
+homepage: https://github.com/derekwaters/ansible_devops_demo/
+issues: https://github.com/derekwaters/ansible_devops_demo/issue/tracker
+
+build_ignore: []
+
