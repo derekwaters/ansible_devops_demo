@@ -34,4 +34,4 @@
 
     - name: Write out the greeting
       ansible.builtin.debug:
-        var: _message
+        msg: _message.greeting

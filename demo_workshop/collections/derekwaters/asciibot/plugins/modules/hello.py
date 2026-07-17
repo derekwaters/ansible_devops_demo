@@ -28,6 +28,7 @@ greeting:
 '''
 
 from art import text2art
+from ansible.module_utils.basic import AnsibleModule
 
 def main():
     module_args = dict(
