@@ -17,10 +17,10 @@
       ansible.builtin.include_role:
         name: "send_email"
       vars:
-        subject: Hello from the Ansible Workshop!
-        to: "{{ account_name }} <{{ email_address }}>"
-        body: This is a sample email from an Ansible playbook
-        from: "{{ account_name }} <{{ email_address }}>"
+        mail_subject: "Hello from the Ansible Workshop!"
+        mail_to: "{{ account_name }} <{{ email_address }}>"
+        mail_body: "This is a sample email from an Ansible playbook"
+        mail_from: "{{ account_name }} <{{ email_address }}>"
 
 - name: Send a chat message to a user
   hosts: all
