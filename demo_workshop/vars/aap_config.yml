@@ -1,7 +1,15 @@
 ---
+
+controller_execution_environments:
+  - name: "ee_asciibot"
+    description: "Asciibot Execution Environment for Workshop"
+    image: "quay.io/rh-ee-dwaters/ee_asciibot"
+    state: present
+
 aap_organizations:
   - name: "AAP_Training"
     description: "Org for Training Exercises"
+    default_environment: "ee_asciibot"
     state: present
   - name: "AAP_Training_Admin"
     description: "Org for Training Exercises Administration"
